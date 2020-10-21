@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends CanvasLayer
+
+
+func _on_Button_pressed() -> void:
+	get_tree().change_scene(\"res://src/level/Level.tscn\")
+	get_tree().call_group(\"Projectiles\", \"queue_free\")
+"
+
+[node name="Main" type="CanvasLayer"]
+script = SubResource( 1 )
