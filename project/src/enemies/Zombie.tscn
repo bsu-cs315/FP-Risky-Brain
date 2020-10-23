@@ -1,8 +1,9 @@
 [gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://src/Zombie.gd" type="Script" id=1]
+[ext_resource path="res://src/enemies/Zombie.gd" type="Script" id=1]
 [ext_resource path="res://assets/visual/enemy/zombie_body.png" type="Texture" id=2]
 [ext_resource path="res://assets/visual/enemy/zombie_head.png" type="Texture" id=3]
+
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 17.0

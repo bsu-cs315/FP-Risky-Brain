@@ -51,10 +51,6 @@ func take_damage(damage: int, area: Area2D, attacker: Node) -> void:
 	attacker.add_currency(reward)
 	
 	
-func give_reward(damage: int, attacker: Node) -> void:
-	attacker.add_currency(damage)
-	
-	
 func die() -> void:
 	get_parent().remove_child(self)
 
