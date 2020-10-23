@@ -5,6 +5,7 @@ export var movement_speed:= 100.0
 export var health:= 100
 export var damage:= 35
 export var attack_time:= 0.75
+export var bounty:= 50
 
 var movement_dir:= Vector2(0.0, 0.0)
 var target: Node2D
@@ -32,19 +33,26 @@ func move_toward_player() -> void:
 	rotation = movement_dir.angle() - (PI / 2)
 	
 
-func take_damage(damage: int, area: Area2D) -> bool:
-	var took_damage: bool = false
-	if area.name == "BodyArea":
-		health -= damage
-		took_damage = true
-		print("HIT")
+func take_damage(damage: int, area: Area2D, attacker: Node) -> void:
+	var damage_to_deal:= damage
+	var reward:= 0
 	if area.name == "HeadArea":
-		health -= damage * 2
-		took_damage = true
-		print("HEADSHOT")
+		damage_to_deal = damage * 2
+	if attacker.has_method("add_currency"):
+		if health < damage_to_deal:
+			reward += health
+		else:
+			reward += damage_to_deal
+	health -= damage_to_deal
 	if health <= 0:
+		if attacker.has_method("add_currency"):
+			reward += bounty
 		die()
-	return took_damage
+	attacker.add_currency(reward)
+	
+	
+func give_reward(damage: int, attacker: Node) -> void:
+	attacker.add_currency(damage)
 	
 	
 func die() -> void:
@@ -71,6 +79,6 @@ func _on_AttackArea_area_exited(area):
 		areas_to_damage.remove(areas_to_damage.find(area))
 
 
-func _on_Timer_timeout():
+func _on_AttackTimer_timeout():
 	for area in areas_to_damage:
-		area.owner.take_damage(damage, area)
+		area.owner.take_damage(damage, area, self)

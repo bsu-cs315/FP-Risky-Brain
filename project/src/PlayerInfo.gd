@@ -10,3 +10,5 @@ func _ready() -> void:
 
 func get_nodes() -> void:
 	playerNode = get_node("/root/Main/Player")
+	
+	

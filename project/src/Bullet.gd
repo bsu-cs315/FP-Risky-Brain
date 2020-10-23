@@ -5,6 +5,7 @@ export var max_lifetime: float = 1.0
 export var speed: float = 100.0
 export var damage: float = 0.0
 
+var shooter: Node
 var direction: Vector2
 var lifetime: float = 0.0
 
@@ -21,5 +22,5 @@ func _on_Bullet_area_entered(area):
 	if owner == null:
 		return
 	if owner.has_method("take_damage"):
-		if owner.take_damage(damage, area):
-			queue_free()
+		owner.take_damage(damage, area, shooter)
+		queue_free()

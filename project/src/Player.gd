@@ -3,7 +3,9 @@ extends KinematicBody2D
 
 export var movement_speed: float = 250.0
 export var health: int = 100
+export var player_id:= 1
 
+var currency:= 0
 var alive: bool = true
 var movement_dir: Vector2 = Vector2(0.0, 0.0)
 var mouse_pos: Vector2
@@ -43,13 +45,17 @@ func move() -> void:
 func rotate_towards_cursor() -> void:
 	rotation = shoot_dir.angle() - (PI / 2)
 	
+	
+func add_currency(amount: int) -> void:
+	currency += amount
+	print(currency)
+	
 
-func take_damage(damage: int, area: Area2D) -> bool:
+func take_damage(damage: int, area: Area2D, attacker: Node) -> bool:
 	var took_damage: bool = false
 	if area.name == "PlayerArea":
 		health -= damage
 		took_damage = true
-		print(health)
 	if health <= 0:
 		die()
 	return took_damage
@@ -63,6 +69,7 @@ func shoot() -> void:
 	var proj: Area2D = bullet.instance()
 	get_tree().get_root().get_node("Main").add_child(proj)
 	proj.damage = 1.0
+	proj.shooter = self
 	proj.direction = shoot_dir
 	proj.position = $Body/PistolShootPoint.global_position
 	proj.rotation = rotation
