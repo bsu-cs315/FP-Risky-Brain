@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/brickwall_tilemap.png-25a6822fa23940ad2f3f49eb52db1e6a.stex"
+path="res://.import/brickwall.png-6ef245f6c25b86e62d13c601f3c7beb6.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/visual/environment/brickwall_tilemap.png"
-dest_files=[ "res://.import/brickwall_tilemap.png-25a6822fa23940ad2f3f49eb52db1e6a.stex" ]
+source_file="res://assets/visual/environment/brickwall.png"
+dest_files=[ "res://.import/brickwall.png-6ef245f6c25b86e62d13c601f3c7beb6.stex" ]
 
 [params]
 
