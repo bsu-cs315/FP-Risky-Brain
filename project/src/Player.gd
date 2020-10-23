@@ -46,6 +46,7 @@ func rotate_towards_cursor() -> void:
 func shoot() -> void:
 	var proj: Area2D = bullet.instance()
 	get_tree().get_root().get_node("Main").add_child(proj)
+	proj.damage = 1.0
 	proj.direction = shoot_dir
 	proj.position = $Body/PistolShootPoint.global_position
 	proj.rotation = rotation
