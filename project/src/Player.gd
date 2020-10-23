@@ -2,6 +2,7 @@ extends KinematicBody2D
 
 
 export var movement_speed: float = 250.0
+export var health: int = 100
 
 var alive: bool = true
 var movement_dir: Vector2 = Vector2(0.0, 0.0)
@@ -41,6 +42,21 @@ func move() -> void:
 
 func rotate_towards_cursor() -> void:
 	rotation = shoot_dir.angle() - (PI / 2)
+	
+
+func take_damage(damage: int, area: Area2D) -> bool:
+	var took_damage: bool = false
+	if area.name == "PlayerArea":
+		health -= damage
+		took_damage = true
+		print(health)
+	if health <= 0:
+		die()
+	return took_damage
+	
+	
+func die() -> void:
+	get_parent().remove_child(self)
 	
 	
 func shoot() -> void:

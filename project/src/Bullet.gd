@@ -16,8 +16,7 @@ func _physics_process(delta: float) -> void:
 		queue_free()
 
 
-func _on_Bullet_area_shape_entered(area_id, area, area_shape, self_shape) -> void:
-	print(area.name)
+func _on_Bullet_area_entered(area):
 	var owner: Node = area.owner
 	if owner == null:
 		return
