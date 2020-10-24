@@ -14,6 +14,7 @@ func initialize(weapon: Weapon):
 	shooter = weapon.shooter
 	speed = weapon.bullet_speed
 	direction = shooter.shoot_dir
+	rotation = shooter.rotation
 	damage = weapon.damage
 	max_lifetime = weapon.max_lifetime
 	position = weapon.shoot_point_node.global_position

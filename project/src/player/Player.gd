@@ -11,9 +11,13 @@ var movement_dir: Vector2 = Vector2(0.0, 0.0)
 var mouse_pos: Vector2
 var shoot_dir: Vector2
 
-onready var current_weapon: Weapon = load("res://src/weapons/Pistol.gd").new(self)
+onready var current_weapon: Weapon = load("res://src/weapons/Shotgun.gd").new(self)
 onready var bullet: Resource = load("res://src/Bullet.tscn")
 
+
+func _process(delta):
+	render()
+	
 
 func _physics_process(delta: float) -> void:
 	if alive:
@@ -21,6 +25,19 @@ func _physics_process(delta: float) -> void:
 		move()
 		rotate_towards_cursor()
 		
+
+func render():
+	change_weapon_sprite()
+	
+	
+func change_weapon_sprite():
+	var frames:= SpriteFrames.new()
+	frames.add_animation("normal")
+	frames.add_frame("normal", current_weapon.player_body_sprite, 0)
+	$Body.frames = frames
+	$Body.animation = "normal"
+	$Body.frame = 0
+	
 
 func get_input() -> void:
 	movement_dir = Vector2(0.0, 0.0)
