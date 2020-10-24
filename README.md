@@ -2,6 +2,8 @@
 
 A 2D game made in Godot by kade-d and adamgack.
 
+[Play Risky Brain](https://bsu-cs315.github.io/FP-Risky-Brain/)
+
 ## Project Report
 
 ### Reflection
