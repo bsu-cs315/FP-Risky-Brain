@@ -11,6 +11,7 @@ var movement_dir: Vector2 = Vector2(0.0, 0.0)
 var mouse_pos: Vector2
 var shoot_dir: Vector2
 
+onready var current_weapon: Weapon = load("res://src/weapons/Pistol.gd").new(self)
 onready var bullet: Resource = load("res://src/Bullet.tscn")
 
 
@@ -34,7 +35,7 @@ func get_input() -> void:
 	if Input.is_action_pressed("game_down"):
 		movement_dir.y += 1.0
 	if Input.is_action_pressed("game_fire"):
-		shoot()
+		current_weapon.shoot()
 	movement_dir = movement_dir.normalized()
 	
 
@@ -48,7 +49,6 @@ func rotate_towards_cursor() -> void:
 	
 func add_currency(amount: int) -> void:
 	currency += amount
-	print(currency)
 	
 
 func take_damage(damage: int, area: Area2D, attacker: Node) -> bool:
@@ -63,13 +63,5 @@ func take_damage(damage: int, area: Area2D, attacker: Node) -> bool:
 	
 func die() -> void:
 	get_parent().remove_child(self)
-	
-	
-func shoot() -> void:
-	var proj: Area2D = bullet.instance()
-	get_tree().get_root().get_node("Main").add_child(proj)
-	proj.damage = 1.0
-	proj.shooter = self
-	proj.direction = shoot_dir
-	proj.position = $Body/PistolShootPoint.global_position
-	proj.rotation = rotation
+
+
