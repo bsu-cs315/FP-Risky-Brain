@@ -25,7 +25,7 @@ func shoot() -> void:
 		shooter.add_child(shot_cooldown_timer)
 		shot_cooldown_timer.one_shot = true
 	if shot_cooldown_timer.time_left == 0.0:
-		for i in range(-pellet_count / 2, pellet_count / 2): #evenly spreads pellets
+		for i in range(floor(-pellet_count / 2.0), floor(pellet_count / 2.0)): #evenly spreads pellets
 			var pellet_angle: float = shooter.shoot_dir.angle() + (i * pellet_inaccuracy) / pellet_count
 			var proj: Area2D = bullet.instance()
 			proj.initialize(self)
