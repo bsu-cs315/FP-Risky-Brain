@@ -27,7 +27,7 @@ _global_script_class_icons={
 [application]
 
 config/name="FP-Risky-Brain"
-run/main_scene="res://src/Main.tscn"
+run/main_scene="res://src/Title.tscn"
 
 [autoload]
 
