@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+signal died
+
 
 export var movement_speed: float = 250.0
 export var health: int = 100
@@ -12,7 +14,11 @@ var mouse_pos: Vector2
 var shoot_dir: Vector2
 
 onready var current_weapon: Weapon = load("res://src/weapons/Shotgun.gd").new(self)
-onready var bullet: Resource = load("res://src/Bullet.tscn")
+onready var bullet: Resource = load("res://src/weapons/Bullet.tscn")
+
+
+func _ready():
+	PlayerInfo.get_nodes()  # re-init singleton
 
 
 func _process(delta):
@@ -77,8 +83,10 @@ func take_damage(damage: int, area: Area2D, attacker: Node) -> bool:
 		die()
 	return took_damage
 	
-	
+
 func die() -> void:
 	get_parent().remove_child(self)
+	emit_signal("died")
+	
 
 

@@ -3,7 +3,7 @@ extends Weapon
 
 func _init(player: Node) -> void:
 	damage = 1.0
-	bullet = load("res://src/Bullet.tscn")
+	bullet = load("res://src/weapons/Bullet.tscn")
 	max_ammo = 100
 	current_ammo = max_ammo
 	bullet_speed = 100

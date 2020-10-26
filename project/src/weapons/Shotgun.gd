@@ -8,7 +8,7 @@ var pellet_inaccuracy:= deg2rad(30.0)
 func _init(player: Node) -> void:
 	weapon_id = "Shotgun"
 	damage = 5.0
-	bullet = load("res://src/Bullet.tscn")
+	bullet = load("res://src/weapons/Bullet.tscn")
 	player_body_sprite = load("res://assets/visual/player/player_body_shotgun.png")
 	max_ammo = 100
 	current_ammo = max_ammo
