@@ -10,8 +10,10 @@ func _init(player: Node) -> void:
 	damage = 5.0
 	bullet = load("res://src/weapons/Bullet.tscn")
 	player_body_sprite = load("res://assets/visual/player/player_body_shotgun.png")
-	max_ammo = 100
+	max_ammo = 20
 	current_ammo = max_ammo
+	max_mag_size = 5
+	current_mag_ammo = max_mag_size
 	shot_cooldown = 0.5
 	bullet_speed = 500
 	shooter = player
@@ -24,7 +26,7 @@ func shoot() -> void:
 	if !shot_cooldown_timer.is_inside_tree():
 		shooter.add_child(shot_cooldown_timer)
 		shot_cooldown_timer.one_shot = true
-	if shot_cooldown_timer.time_left == 0.0:
+	if shot_cooldown_timer.time_left == 0.0 and current_ammo > 0:
 		for i in range(floor(-pellet_count / 2.0), floor(pellet_count / 2.0)): #evenly spreads pellets
 			var pellet_angle: float = shooter.shoot_dir.angle() + (i * pellet_inaccuracy) / pellet_count
 			var proj: Area2D = bullet.instance()
@@ -32,6 +34,7 @@ func shoot() -> void:
 			proj.direction = Vector2(cos(pellet_angle), sin(pellet_angle))
 			shooter.get_tree().get_root().get_node("Main").add_child(proj)
 		shot_cooldown_timer.start(shot_cooldown)
+		current_ammo -= 1
 
 
 

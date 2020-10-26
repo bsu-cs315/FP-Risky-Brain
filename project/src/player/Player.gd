@@ -7,18 +7,22 @@ export var movement_speed: float = 250.0
 export var health: int = 100
 export var player_id:= 1
 
+var inventory:= Inventory.new()
 var currency:= 0
 var alive: bool = true
 var movement_dir: Vector2 = Vector2(0.0, 0.0)
 var mouse_pos: Vector2
 var shoot_dir: Vector2
 
-onready var current_weapon: Weapon = load("res://src/weapons/Shotgun.gd").new(self)
+onready var current_weapon: Weapon
 onready var bullet: Resource = load("res://src/weapons/Bullet.tscn")
 
 
 func _ready():
 	PlayerInfo.get_nodes()  # re-init singleton
+	inventory.primary = load("res://src/weapons/Shotgun.gd").new(self)
+	inventory.secondary = load("res://src/weapons/Pistol.gd").new(self)
+	current_weapon = inventory.primary
 
 
 func _process(delta):
@@ -58,9 +62,9 @@ func get_input() -> void:
 	if Input.is_action_pressed("game_down"):
 		movement_dir.y += 1.0
 	if Input.is_action_just_pressed("game_primary"):
-		current_weapon = load("res://src/weapons/Shotgun.gd").new(self)
+		current_weapon = inventory.primary
 	if Input.is_action_just_pressed("game_secondary"):
-		current_weapon = load("res://src/weapons/Pistol.gd").new(self)
+		current_weapon = inventory.secondary
 	if Input.is_action_pressed("game_fire"):
 		current_weapon.shoot()
 	movement_dir = movement_dir.normalized()
