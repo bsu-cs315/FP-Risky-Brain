@@ -67,6 +67,8 @@ func get_input() -> void:
 		current_weapon = inventory.secondary
 	if Input.is_action_pressed("game_fire"):
 		current_weapon.shoot()
+	if Input.is_action_pressed("game_reload"):
+		current_weapon.reload()
 	movement_dir = movement_dir.normalized()
 	
 
