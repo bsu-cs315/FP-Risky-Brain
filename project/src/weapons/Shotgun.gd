@@ -32,7 +32,7 @@ func shoot() -> void:
 			var proj: Area2D = bullet.instance()
 			proj.initialize(self)
 			proj.direction = Vector2(cos(pellet_angle), sin(pellet_angle))
-			shooter.get_tree().get_root().get_node("Main").add_child(proj)
+			shooter.get_node("/root/World").add_child(proj)
 		shot_cooldown_timer.start(shot_cooldown)
 		current_ammo -= 1
 

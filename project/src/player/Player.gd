@@ -16,6 +16,7 @@ var shoot_dir: Vector2
 
 onready var current_weapon: Weapon
 onready var bullet: Resource = load("res://src/weapons/Bullet.tscn")
+var camera : Camera2D = Camera2D.new()
 
 
 func _ready():
@@ -23,6 +24,9 @@ func _ready():
 	inventory.primary = load("res://src/weapons/Shotgun.gd").new(self)
 	inventory.secondary = load("res://src/weapons/Pistol.gd").new(self)
 	current_weapon = inventory.primary
+	camera.current = is_network_master()
+	camera.zoom = Vector2(1, 1)
+	add_child(camera)
 
 
 func _process(delta):
@@ -30,16 +34,22 @@ func _process(delta):
 	
 
 func _physics_process(delta: float) -> void:
-	if alive:
+	if alive && is_network_master():
 		get_input()
 		move()
 		rotate_towards_cursor()
-		
+		rpc('remote_move', position)
+
+
+puppet func remote_move(pos: Vector2):
+	print("moved_remote for: " + name)
+	position = pos
+
 
 func render():
 	change_weapon_sprite()
 	
-	
+
 func change_weapon_sprite():
 	var frames:= SpriteFrames.new()
 	frames.add_animation("normal")
@@ -82,7 +92,7 @@ func add_currency(amount: int) -> void:
 	currency += amount
 	
 
-func take_damage(damage: int, area: Area2D, attacker: Node) -> bool:
+func take_damage(damage: int, area: Area2D, _attacker: Node) -> bool:
 	var took_damage: bool = false
 	if area.name == "PlayerArea":
 		health -= damage

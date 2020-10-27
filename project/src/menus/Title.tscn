@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://assets/fonts/Staatliches-Regular.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://src/Title.gd" type="Script" id=2]
+[ext_resource path="res://src/menus/Title.gd" type="Script" id=2]
 
 [sub_resource type="DynamicFont" id=1]
 size = 40
@@ -37,14 +37,28 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button" type="Button" parent="."]
+[node name="PlayButton" type="Button" parent="."]
 margin_left = 491.369
 margin_top = 336.399
 margin_right = 755.369
 margin_bottom = 440.399
+rect_pivot_offset = Vector2( -63.654, 52 )
 custom_fonts/font = SubResource( 2 )
 text = "Play"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
+
+[node name="MultiplayerButton" type="Button" parent="."]
+margin_left = 487.802
+margin_top = 492.185
+margin_right = 751.802
+margin_bottom = 596.185
+rect_pivot_offset = Vector2( -63.654, 52 )
+custom_fonts/font = SubResource( 2 )
+text = "Multiplayer"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="PlayButton" to="." method="_on_PlayButton_pressed"]
+[connection signal="pressed" from="MultiplayerButton" to="." method="_on_MultiplayerButton_pressed"]
