@@ -4,7 +4,7 @@ steps:
   dir: "project-server"
   timeout: 30s
 - name: "bash"
-  args: ["mv", "/root/.local/share/godot/templates/3.2.2.stable", "~/.local/share/godot/templates/3.2.2.stable"]
+  args: ["mv", "/builder/home/.local/share/godot/templates/3.2.2.stable", "~/.local/share/godot/templates/3.2.2.stable"]
   dir: "project-server"
   timeout: 30s
 - name: "barichello/godot-ci:3.2.2"
