@@ -1,5 +1,5 @@
 steps:
 - name: "barichello/godot-ci:3.2.2"
-  args: ["--export", "Linux/X11", "../build/server.pck"]
+  args: ["godot","--export", "Linux/X11", "../build/server.pck"]
   dir: "project-server"
   timeout: 60s
