@@ -30,3 +30,11 @@ remotesync func configure_game(info: Dictionary):
 		player.set_network_master(p)
 		get_node("/root/World/Players").add_child(player)
 
+
+func configure_single_player_game():
+	get_node("/root/Title").queue_free()
+	var world = load("res://src/Main.tscn").instance()
+	get_node("/root").add_child(world)
+	var player = preload("res://src/player/Player.tscn").instance()
+	player.set_name(str("SinglePlayer"))
+	get_node("/root/World/Players").add_child(player)

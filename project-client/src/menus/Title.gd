@@ -2,8 +2,7 @@ extends Node2D
 
 
 func _on_PlayButton_pressed():
-	Server.pre_configure_game()
-	get_tree().change_scene("res://src/Main.tscn")
+	Server.configure_single_player_game()
 
 
 func _on_MultiplayerButton_pressed():

@@ -6,7 +6,8 @@ export var movement_speed: float = 250.0
 export var health: int = 100
 export var player_id:= 1
 
-var inputs : Dictionary
+var owner_inputs : Dictionary
+var puppet_inputs : Dictionary
 var inventory:= Inventory.new()
 var currency:= 0
 var alive: bool = true
@@ -20,29 +21,41 @@ onready var bullet: Resource = load("res://src/weapons/Bullet.tscn")
 var camera : Camera2D = Camera2D.new()
 
 
+remote func send_puppet_inputs(inputs: Dictionary):
+	puppet_inputs = inputs
+
+
 func _ready():
 	inventory.primary = load("res://src/weapons/Shotgun.gd").new(self)
 	inventory.secondary = load("res://src/weapons/Pistol.gd").new(self)
 	current_weapon = inventory.primary
 	change_weapon_sprite()
-	if is_network_master():
+	if name == "SinglePlayer" || is_network_master():
 		camera.current = true
 		camera.zoom = Vector2(1, 1)
 		add_child(camera)
 
 
 func _physics_process(delta: float) -> void:
+	if name == "SinglePlayer":
+		owner_inputs = get_inputs()
+		move(owner_inputs)
+		return
 	if str(get_tree().get_network_unique_id()) == name:
-		inputs = get_inputs()
-		move()
-		rpc_id(1, "send_player_inputs", inputs)
+		#I am controlling this player, move based on my inputs
+		owner_inputs = get_inputs()
+		move(owner_inputs)
+		rpc_id(1, "send_player_inputs", owner_inputs)
 	else:
-		pass
+		#I am not in control of this player, move based on server input
+		move(puppet_inputs)
 
 
-remote func check_position(pos: Vector2):
+remote func validate_movements(pos: Vector2, rot: float):
 	if pos != position:
 		position = pos
+	if rot != rotation:
+		rotation = rot
 
 
 func get_inputs() -> Dictionary:
@@ -54,22 +67,17 @@ func get_inputs() -> Dictionary:
 		primary = Input.is_action_just_pressed("game_primary"),
 		secondary = Input.is_action_just_pressed("game_secondary"),
 		fire = Input.is_action_pressed("game_fire"),
+		reload = Input.is_action_pressed("game_reload"),
 		mouse_pos = get_global_mouse_position()
 	}
 	
 	return inputs
 	
-
-func change_weapon_sprite():
-	var frames:= SpriteFrames.new()
-	frames.add_animation("normal")
-	frames.add_frame("normal", current_weapon.player_body_sprite, 0)
-	$Body.frames = frames
-	$Body.animation = "normal"
-	$Body.frame = 0
 	
 
-func move() -> void:
+func move(inputs: Dictionary) -> void:
+	if inputs.empty():
+		return
 	movement_dir = Vector2.ZERO
 	mouse_pos = inputs.mouse_pos
 	shoot_dir = position.direction_to(mouse_pos)
@@ -89,13 +97,21 @@ func move() -> void:
 		change_weapon_sprite()
 	if inputs.fire:
 		current_weapon.shoot()
-	if Input.is_action_pressed("game_reload"):
+	if inputs.reload:
 		current_weapon.reload()
 	rotation = shoot_dir.angle() - (PI / 2)
 	movement_dir = movement_dir.normalized()
 	velocity = movement_dir * movement_speed
 	move_and_slide(velocity)
 
+
+func change_weapon_sprite():
+	var frames:= SpriteFrames.new()
+	frames.add_animation("normal")
+	frames.add_frame("normal", current_weapon.player_body_sprite, 0)
+	$Body.frames = frames
+	$Body.animation = "normal"
+	$Body.frame = 0
 	
 	
 func add_currency(amount: int) -> void:

@@ -17,10 +17,6 @@ var ammo_mag_current: int
 var max_lifetime: float
 
 var shoot_point_node: Node
-
-
-func _init() -> void:
-	print("wep")
 	
 	
 func shoot() -> void:
@@ -30,7 +26,7 @@ func shoot() -> void:
 	if shot_cooldown_timer.time_left == 0.0 and ammo_mag_current > 0:
 		var proj: Area2D = bullet.instance()
 		proj.initialize(self)
-		shooter.get_tree().get_root().get_node("Main").add_child(proj)
+		shooter.get_node("/root/World").add_child(proj)
 		shot_cooldown_timer.start(shot_cooldown)
 		decrement_ammo(1)
 		
