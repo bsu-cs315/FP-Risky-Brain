@@ -1,14 +1,5 @@
 steps:
 - name: "bash"
-  args: ["mkdir", "-v", "-p", "~/.local/share/godot/templates"]
-  timeout: 30s
-- name: "bash"
-  args: ["find", "/", "-name", "project.godot"]
-  timeout: 30s
-- name: "bash"
-  args: ["mv", "/workspace/.local/share/godot/templates/3.2.2.stable", "~/.local/share/godot/templates/3.2.2.stable"]
-  timeout: 30s
-- name: "bash"
   args: ["mkdir", "-v", "-p", "build/linux"]
   dir: "project-server"
   timeout: 30s
