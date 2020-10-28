@@ -1,5 +1,13 @@
 steps:
+- name: "bash"
+  args: ["mkdir", "-v", "-p", "~/.local/share/godot/templates"]
+  dir: "project-server"
+  timeout: 30s
+- name: "bash"
+  args: ["mv", "/root/.local/share/godot/templates/3.2.2.stable", "~/.local/share/godot/templates/3.2.2.stable"]
+  dir: "project-server"
+  timeout: 30s
 - name: "barichello/godot-ci:3.2.2"
   args: ["godot", "-v", "--export", "Linux/X11", "build/server.pck"]
   dir: "project-server"
-  timeout: 60s
+  timeout: 120s
