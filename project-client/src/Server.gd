@@ -14,7 +14,7 @@ func _connected_ok():
 	rpc_id(1, "register_player", {position = Vector2.ZERO})
 
 
-remotesync func configure_game(info: Dictionary):
+remotesync func configure_multiplayer_game(info: Dictionary):
 	player_info = info
 	var self_peer_id = get_tree().get_network_unique_id()
 
@@ -29,12 +29,14 @@ remotesync func configure_game(info: Dictionary):
 		player.set_name(str(p))
 		player.set_network_master(p)
 		get_node("/root/World/Players").add_child(player)
+	PlayerInfo.get_player_nodes()
 
 
-func configure_single_player_game():
+func configure_singleplayer_game():
 	get_node("/root/Title").queue_free()
 	var world = load("res://src/Main.tscn").instance()
 	get_node("/root").add_child(world)
 	var player = preload("res://src/player/Player.tscn").instance()
 	player.set_name(str("SinglePlayer"))
 	get_node("/root/World/Players").add_child(player)
+	PlayerInfo.get_player_nodes()

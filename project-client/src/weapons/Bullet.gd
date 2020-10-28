@@ -4,9 +4,9 @@ extends Area2D
 var shooter: Node
 var speed: float
 var direction: Vector2
+var movement_vector: Vector2
 var damage: float
 var max_lifetime: float
-
 var lifetime: float = 0.0
 
 
@@ -26,24 +26,30 @@ func _ready():
 	assert(damage, "Max lifetime must be initialized!")
 	assert(shooter, "Max lifetime must be initialized!")
 	assert(direction, "Max lifetime must be initialized!")
-	
+	movement_vector = direction.normalized() * speed * get_physics_process_delta_time()
+	$RayCast2D.cast_to = Vector2(0.0, movement_vector.length())
+
 
 func _physics_process(delta: float) -> void:
-	position += direction.normalized() * speed * delta
+	# checks raycast to see if it will collide with anything before moving
+	if $RayCast2D.is_colliding():
+		var collision: Object = $RayCast2D.get_collider()
+		handle_collision(collision)
+	position += movement_vector
 	lifetime += delta
 	if lifetime >= max_lifetime:
 		queue_free()
 
 
-func _on_Bullet_area_entered(area):
-	var owner: Node = area.owner
-	if owner == null:
+func handle_collision(collision: Object):
+	if collision is Area2D:
+		var owner: Node = collision.owner
+		if owner == null:
+			return
+		if owner.has_method("take_damage"):
+			owner.take_damage(damage, collision, shooter)
+			queue_free()
 		return
-	if owner.has_method("take_damage"):
-		owner.take_damage(damage, area, shooter)
-		queue_free()
-	
-
-func _on_Bullet_body_entered(body):
-	if body.name == "Walls":
-		queue_free()
+	if collision is TileMap:
+		if collision.name == "Walls":
+			queue_free()

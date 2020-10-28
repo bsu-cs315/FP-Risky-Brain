@@ -10,11 +10,11 @@ func _init(player: Node) -> void:
 	damage = 5
 	bullet = load("res://src/weapons/Bullet.tscn")
 	player_body_sprite = load("res://assets/visual/player/player_body_shotgun.png")
-	ammo_total_max = 20
+	ammo_total_max = 1000
 	ammo_total_current = ammo_total_max
-	ammo_mag_max = 5
+	ammo_mag_max = 1000
 	ammo_mag_current = ammo_mag_max
-	shot_cooldown = 0.5
+	shot_cooldown = 0.1
 	bullet_speed = 500
 	shooter = player
 	max_lifetime = 1.0
@@ -32,6 +32,7 @@ func shoot() -> void:
 			var proj: Area2D = bullet.instance()
 			proj.initialize(self)
 			proj.direction = Vector2(cos(pellet_angle), sin(pellet_angle))
+			proj.rotation = pellet_angle - (PI / 2)
 			shooter.get_node("/root/World").add_child(proj)
 		shot_cooldown_timer.start(shot_cooldown)
 		decrement_ammo(1)

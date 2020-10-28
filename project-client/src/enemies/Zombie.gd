@@ -7,24 +7,23 @@ export var damage:= 35
 export var attack_time:= 0.75
 export var bounty:= 50
 
+var alive:= true
 var movement_dir:= Vector2(0.0, 0.0)
 var target: Node2D
 var areas_to_damage: Array
 var attack_timer:= Timer.new()
 
 
-func _ready() -> void:
-	find_player()
-
-
 func _physics_process(delta: float) -> void:
+	find_player()
 	move_toward_player()
 	if health <= 0:
 		die()
 		
 		
 func find_player() -> void:
-	target = PlayerInfo.playerNode
+	if PlayerInfo.player_nodes[0] != null:
+		target = PlayerInfo.player_nodes[0]
 
 
 func move_toward_player() -> void:
@@ -34,6 +33,8 @@ func move_toward_player() -> void:
 	
 
 func take_damage(damage: int, area: Area2D, attacker: Node) -> void:
+	if !alive:
+		return
 	var damage_to_deal:= damage
 	var reward:= 0
 	if area.name == "HeadArea":
@@ -52,7 +53,8 @@ func take_damage(damage: int, area: Area2D, attacker: Node) -> void:
 	
 	
 func die() -> void:
-	get_parent().remove_child(self)
+	alive = false
+	queue_free()
 
 
 func _on_AttackArea_area_entered(area):

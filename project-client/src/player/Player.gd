@@ -96,7 +96,8 @@ func move(inputs: Dictionary) -> void:
 		current_weapon = inventory.secondary
 		change_weapon_sprite()
 	if inputs.fire:
-		current_weapon.shoot()
+		if weapon_can_fire():
+			current_weapon.shoot()
 	if inputs.reload:
 		current_weapon.reload()
 	rotation = shoot_dir.angle() - (PI / 2)
@@ -112,11 +113,21 @@ func change_weapon_sprite():
 	$Body.frames = frames
 	$Body.animation = "normal"
 	$Body.frame = 0
+	cast_weapon_collider()
 	
 	
 func add_currency(amount: int) -> void:
 	currency += amount
 	
+
+func cast_weapon_collider():
+	$RayCast2D.cast_to = Vector2(current_weapon.shoot_point_node.position.x, current_weapon.shoot_point_node.position.y)
+
+
+func weapon_can_fire() -> bool:
+	if $RayCast2D.is_colliding():
+		return false
+	return true
 
 func take_damage(damage: int, area: Area2D, _attacker: Node) -> bool:
 	var took_damage: bool = false

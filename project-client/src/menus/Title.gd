@@ -2,7 +2,7 @@ extends Node2D
 
 
 func _on_PlayButton_pressed():
-	Server.configure_single_player_game()
+	Server.configure_singleplayer_game()
 
 
 func _on_MultiplayerButton_pressed():

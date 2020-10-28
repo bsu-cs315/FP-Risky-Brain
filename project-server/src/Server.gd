@@ -28,10 +28,10 @@ remote func register_player(info: Dictionary):
 
 
 remote func start_game():
-	rpc("configure_game", player_info)
+	rpc("configure_multiplayer_game", player_info)
 
 
-remotesync func configure_game(info: Dictionary):
+remotesync func configure_multiplayer_game(info: Dictionary):
 	player_info = info
 	var self_peer_id = get_tree().get_network_unique_id()
 

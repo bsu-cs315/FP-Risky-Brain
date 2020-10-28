@@ -18,27 +18,35 @@ font_data = ExtResource( 1 )
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource( 2 )
 
-[node name="HealthBar" type="ProgressBar" parent="."]
+[node name="Control" type="Control" parent="."]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HealthBar" type="ProgressBar" parent="Control"]
 anchor_top = 1.0
 anchor_bottom = 1.0
 margin_left = 42.7149
-margin_top = -83.0361
+margin_top = 596.964
 margin_right = 257.715
-margin_bottom = -32.0361
+margin_bottom = 647.964
 custom_fonts/font = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CurrencyLabel" type="Label" parent="."]
+[node name="CurrencyLabel" type="Label" parent="Control"]
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -81.4114
-margin_top = -689.51
-margin_right = -41.4109
-margin_bottom = -656.51
+margin_left = 1158.59
+margin_top = -9.51001
+margin_right = 1198.59
+margin_bottom = 23.49
 custom_fonts/font = SubResource( 2 )
 text = "$0"
 align = 1
@@ -47,7 +55,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AmmoLabel" type="Label" parent="."]
+[node name="AmmoLabel" type="Label" parent="Control"]
 margin_left = 1169.64
 margin_top = 628.036
 margin_right = 1245.64

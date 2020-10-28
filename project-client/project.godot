@@ -26,12 +26,13 @@ _global_script_class_icons={
 
 [application]
 
-config/name="FP-Risky-Brain"
+config/name="FP-Risky-Brain-Client"
 run/main_scene="res://src/menus/Title.tscn"
 
 [autoload]
 
 Server="*res://src/Server.tscn"
+PlayerInfo="*res://src/player/PlayerInfo.gd"
 
 [display]
 
