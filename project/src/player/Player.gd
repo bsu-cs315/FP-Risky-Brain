@@ -2,15 +2,16 @@ extends KinematicBody2D
 
 signal died
 
-
 export var movement_speed: float = 250.0
 export var health: int = 100
 export var player_id:= 1
 
+var inputs : Dictionary
 var inventory:= Inventory.new()
 var currency:= 0
 var alive: bool = true
 var movement_dir: Vector2 = Vector2(0.0, 0.0)
+var velocity : Vector2
 var mouse_pos: Vector2
 var shoot_dir: Vector2
 
@@ -20,34 +21,43 @@ var camera : Camera2D = Camera2D.new()
 
 
 func _ready():
-	PlayerInfo.get_nodes()  # re-init singleton
 	inventory.primary = load("res://src/weapons/Shotgun.gd").new(self)
 	inventory.secondary = load("res://src/weapons/Pistol.gd").new(self)
 	current_weapon = inventory.primary
-	camera.current = is_network_master()
-	camera.zoom = Vector2(1, 1)
-	add_child(camera)
+	change_weapon_sprite()
+	if is_network_master():
+		camera.current = true
+		camera.zoom = Vector2(1, 1)
+		add_child(camera)
 
-
-func _process(delta):
-	render()
-	
 
 func _physics_process(delta: float) -> void:
-	if alive && is_network_master():
-		get_input()
+	if str(get_tree().get_network_unique_id()) == name:
+		inputs = get_inputs()
 		move()
-		rotate_towards_cursor()
-		rpc('remote_move', position)
+		rpc_id(1, "send_player_inputs", inputs)
+	else:
+		pass
 
 
-puppet func remote_move(pos: Vector2):
-	print("moved_remote for: " + name)
-	position = pos
+remote func check_position(pos: Vector2):
+	if pos != position:
+		position = pos
 
 
-func render():
-	change_weapon_sprite()
+func get_inputs() -> Dictionary:
+	var inputs : Dictionary = {
+		left = Input.is_action_pressed("game_left"),
+		right = Input.is_action_pressed("game_right"),
+		up = Input.is_action_pressed("game_up"),
+		down = Input.is_action_pressed("game_down"),
+		primary = Input.is_action_just_pressed("game_primary"),
+		secondary = Input.is_action_just_pressed("game_secondary"),
+		fire = Input.is_action_pressed("game_fire"),
+		mouse_pos = get_global_mouse_position()
+	}
+	
+	return inputs
 	
 
 func change_weapon_sprite():
@@ -59,35 +69,33 @@ func change_weapon_sprite():
 	$Body.frame = 0
 	
 
-func get_input() -> void:
-	movement_dir = Vector2(0.0, 0.0)
-	mouse_pos = get_global_mouse_position()
+func move() -> void:
+	movement_dir = Vector2.ZERO
+	mouse_pos = inputs.mouse_pos
 	shoot_dir = position.direction_to(mouse_pos)
-	if Input.is_action_pressed("game_left"):
+	if inputs.left:
 		movement_dir.x -= 1.0
-	if Input.is_action_pressed("game_right"):
+	if inputs.right:
 		movement_dir.x += 1.0
-	if Input.is_action_pressed("game_up"):
+	if inputs.up:
 		movement_dir.y -= 1.0
-	if Input.is_action_pressed("game_down"):
+	if inputs.down:
 		movement_dir.y += 1.0
-	if Input.is_action_just_pressed("game_primary"):
+	if inputs.primary:
 		current_weapon = inventory.primary
-	if Input.is_action_just_pressed("game_secondary"):
+		change_weapon_sprite()
+	if inputs.secondary:
 		current_weapon = inventory.secondary
-	if Input.is_action_pressed("game_fire"):
+		change_weapon_sprite()
+	if inputs.fire:
 		current_weapon.shoot()
 	if Input.is_action_pressed("game_reload"):
 		current_weapon.reload()
-	movement_dir = movement_dir.normalized()
-	
-
-func move() -> void:
-	move_and_slide(movement_dir * movement_speed)
-
-
-func rotate_towards_cursor() -> void:
 	rotation = shoot_dir.angle() - (PI / 2)
+	movement_dir = movement_dir.normalized()
+	velocity = movement_dir * movement_speed
+	move_and_slide(velocity)
+
 	
 	
 func add_currency(amount: int) -> void:

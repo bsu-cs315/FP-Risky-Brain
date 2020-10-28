@@ -24,10 +24,10 @@ __meta__ = {
 
 [node name="StartButton" type="Button" parent="."]
 visible = false
-margin_left = 516.116
-margin_top = 447.142
-margin_right = 753.116
-margin_bottom = 550.142
+margin_left = 475.683
+margin_top = 369.843
+margin_right = 712.683
+margin_bottom = 472.844
 custom_fonts/font = SubResource( 1 )
 text = "Start Game"
 __meta__ = {
@@ -35,23 +35,12 @@ __meta__ = {
 }
 
 [node name="JoinButton" type="Button" parent="."]
-margin_left = 774.174
-margin_top = 445.953
-margin_right = 1011.17
-margin_bottom = 548.953
+margin_left = 751.579
+margin_top = 369.844
+margin_right = 988.575
+margin_bottom = 472.844
 custom_fonts/font = SubResource( 1 )
 text = "Join Game"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="HostButton" type="Button" parent="."]
-margin_left = 260.437
-margin_top = 449.521
-margin_right = 497.437
-margin_bottom = 552.521
-custom_fonts/font = SubResource( 1 )
-text = "Host"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -70,13 +59,13 @@ __meta__ = {
 }
 
 [node name="JoinGameField" type="TextEdit" parent="."]
-margin_left = 797.0
-margin_top = 564.0
-margin_right = 999.0
-margin_bottom = 671.0
+margin_left = 755.378
+margin_top = 516.431
+margin_right = 957.378
+margin_bottom = 623.431
 text = "Enter IP Here"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+[connection signal="pressed" from="StartButton" to="." method="_on_StartButton_pressed"]
 [connection signal="pressed" from="JoinButton" to="." method="_on_JoinButton_pressed"]
-[connection signal="pressed" from="HostButton" to="." method="_on_HostButton_pressed"]

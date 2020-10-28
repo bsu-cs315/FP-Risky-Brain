@@ -2,21 +2,10 @@ extends Node
 
 
 const SERVER_PORT = 90
-const MAX_PLAYERS = 2
 
 
 func _on_StartButton_pressed():
-	get_tree().change_scene("res://src/Main.tscn")
-
-
-func _on_HostButton_pressed():
-	var peer := NetworkedMultiplayerENet.new()
-	peer.create_server(SERVER_PORT, MAX_PLAYERS)
-	get_tree().network_peer = peer
-	$JoinButton.hide()
-	$JoinGameField.hide()
-	$HostButton.hide()
-	$StartButton.show()
+	Server.rpc_id(1, "start_game")
 
 
 func _on_JoinButton_pressed():
@@ -25,7 +14,7 @@ func _on_JoinButton_pressed():
 	get_tree().network_peer = peer
 	$JoinGameField.hide()
 	$JoinButton.hide()
-	$HostButton.hide()
+	$StartButton.show()
 
 
 func get_join_ip_address() -> String:

@@ -2,7 +2,7 @@ extends Node2D
 
 
 func _on_PlayButton_pressed():
-	Lobby.pre_configure_game()
+	Server.pre_configure_game()
 	get_tree().change_scene("res://src/Main.tscn")
 
 

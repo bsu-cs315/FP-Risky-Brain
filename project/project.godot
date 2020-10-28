@@ -31,9 +31,7 @@ run/main_scene="res://src/menus/Title.tscn"
 
 [autoload]
 
-PlayerInfo="*res://src/player/PlayerInfo.gd"
-GameState="*res://src/GameState.gd"
-Lobby="*res://src/Lobby.tscn"
+Server="*res://src/Server.tscn"
 
 [display]
 

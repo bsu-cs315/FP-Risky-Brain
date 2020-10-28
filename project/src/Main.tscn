@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://assets/visual/environment/floor.png" type="Texture" id=3]
 [ext_resource path="res://src/HUD.tscn" type="PackedScene" id=4]
@@ -104,7 +104,6 @@ points = PoolVector2Array( 0, 0, 7.97718, 0, 7.97718, 7.98395, 0, 7.98395 )
 2/z_index = 0
 
 [node name="World" type="Node2D"]
-script = SubResource( 7 )
 
 [node name="Floor" type="TileMap" parent="."]
 tile_set = SubResource( 1 )
