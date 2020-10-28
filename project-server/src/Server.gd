@@ -1,15 +1,20 @@
 extends Node
 
-const SERVER_PORT = 90
-const MAX_PLAYERS = 2
+const SERVER_PORT = 1407
+const MAX_PLAYERS = 20
 
 
 func _ready():
 	get_tree().connect("network_peer_connected", self, "_player_connected")
 	get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
-	var host = NetworkedMultiplayerENet.new()
-	host.create_server(SERVER_PORT, MAX_PLAYERS)
-	get_tree().network_peer = host
+	
+	var peer = NetworkedMultiplayerENet.new()
+	var err = peer.create_server(SERVER_PORT, MAX_PLAYERS)
+	peer.set_bind_ip("35.239.181.55")
+	if err != OK:
+		print_debug("Error: " + str(err) + " create server err for port " + str(SERVER_PORT))
+	get_tree().set_network_peer(peer)
+
 
 
 var player_info = { }

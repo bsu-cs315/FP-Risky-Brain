@@ -1,20 +1,31 @@
 extends Node
 
-const SERVER_PORT = 90
-const MAX_PLAYERS = 2
 
 func _ready():
 	get_tree().connect("connected_to_server", self, "_connected_ok")
+	get_tree().connect("connection_failed", self, "_connected_fail")
+	get_tree().connect("server_disconnected", self, "_server_disconnected")
 
 
 var player_info = { }
 
 
 func _connected_ok():
+	print("Connected to server")
 	rpc_id(1, "register_player", {position = Vector2.ZERO})
 
 
+func _connected_fail():
+	print("Could not connect to server")
+	
+
+func _server_disconnected():
+	print("Server kicked us")
+
+
 remotesync func configure_multiplayer_game(info: Dictionary):
+	if get_node("/root/World") != null:
+		return
 	player_info = info
 	var self_peer_id = get_tree().get_network_unique_id()
 
