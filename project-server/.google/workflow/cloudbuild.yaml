@@ -3,7 +3,7 @@ steps:
   args: ["mkdir", "-v", "-p", "~/.local/share/godot/templates"]
   timeout: 30s
 - name: "bash"
-  args: ["pwd"]
+  args: ["find", "/", "-name", "3.2.2.stable"]
   timeout: 30s
 - name: "bash"
   args: ["mv", "/workspace/.local/share/godot/templates/3.2.2.stable", "~/.local/share/godot/templates/3.2.2.stable"]
