@@ -14,7 +14,7 @@ var areas_to_damage: Array
 var attack_timer:= Timer.new()
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	find_player()
 	move_toward_player()
 	if health <= 0:
@@ -32,19 +32,19 @@ func move_toward_player() -> void:
 	rotation = movement_dir.angle() - (PI / 2)
 	
 
-func take_damage(damage: int, area: Area2D, attacker: Node) -> void:
+func take_damage(damage_incoming: int, area: Area2D, attacker: Node) -> void:
 	if !alive:
 		return
-	var damage_to_deal:= damage
+	var damage_to_take:= damage_incoming
 	var reward:= 0
 	if area.name == "HeadArea":
-		damage_to_deal = damage * 2
+		damage_to_take = damage_incoming * 2
 	if attacker.has_method("add_currency"):
-		if health < damage_to_deal:
+		if health < damage_to_take:
 			reward += health
 		else:
-			reward += damage_to_deal
-	health -= damage_to_deal
+			reward += damage_to_take
+	health -= damage_to_take
 	if health <= 0:
 		if attacker.has_method("add_currency"):
 			reward += bounty

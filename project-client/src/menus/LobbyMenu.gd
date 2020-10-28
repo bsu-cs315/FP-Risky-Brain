@@ -1,7 +1,7 @@
 extends Node
 
 
-const SERVER_PORT = 90
+const SERVER_PORT = 1407
 
 
 func _on_StartButton_pressed():
@@ -10,7 +10,7 @@ func _on_StartButton_pressed():
 
 func _on_JoinButton_pressed():
 	var peer = NetworkedMultiplayerENet.new()
-	peer.create_client("localhost", SERVER_PORT)
+	peer.create_client("35.239.181.55", SERVER_PORT)
 	get_tree().network_peer = peer
 	$JoinGameField.hide()
 	$JoinButton.hide()
