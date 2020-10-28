@@ -16,7 +16,7 @@ func _ready():
 	get_tree().set_network_peer(peer)
 
 
-
+var players_in_game : Dictionary # Player Nodes
 var player_info = { }
 
 
@@ -25,15 +25,27 @@ func _player_connected(id):
 
 
 func _player_disconnected(id):
-	player_info.erase(id) # Erase player from info.
-
+	print("player %d disconnected" % id)
+	player_info.erase(id)
+	if id in players_in_game:
+		get_node("/root/World/Players").remove_child(players_in_game[id])
+	if players_in_game.size() == 0:
+		end_game()
+	
 
 remote func register_player(info: Dictionary):
 	player_info[get_tree().get_rpc_sender_id()] = info
 
 
 remote func start_game():
-	rpc("configure_multiplayer_game", player_info)
+	if not get_node("/root/World"): # if not game already started
+		rpc("configure_multiplayer_game", player_info)
+	
+	
+func end_game():
+	get_node("/root/World").queue_free()
+	player_info.clear()
+	players_in_game.clear()
 
 
 remotesync func configure_multiplayer_game(info: Dictionary):
@@ -45,10 +57,11 @@ remotesync func configure_multiplayer_game(info: Dictionary):
 	get_node("/root").add_child(world)
 
 	# Load players
-	for p in player_info:
+	for p_id in player_info:
 		var player = preload("res://src/player/Player.tscn").instance()
-		player.set_name(str(p))
-		player.set_network_master(p)
+		player.set_name(str(p_id))
+		player.set_network_master(p_id)
 		if not player in get_node("/root/World/Players").get_children():
 			get_node("/root/World/Players").add_child(player)
+			players_in_game[p_id] = player
 

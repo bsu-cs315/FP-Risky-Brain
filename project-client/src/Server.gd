@@ -24,8 +24,6 @@ func _server_disconnected():
 
 
 remotesync func configure_multiplayer_game(info: Dictionary):
-	if get_node("/root/World") != null:
-		return
 	player_info = info
 	var self_peer_id = get_tree().get_network_unique_id()
 
