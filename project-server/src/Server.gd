@@ -10,7 +10,7 @@ func _ready():
 	
 	var peer = NetworkedMultiplayerENet.new()
 	var err = peer.create_server(SERVER_PORT, MAX_PLAYERS)
-	peer.set_bind_ip("35.239.181.55")
+	peer.set_bind_ip("34.68.78.182")
 	if err != OK:
 		print_debug("Error: " + str(err) + " create server err for port " + str(SERVER_PORT))
 	get_tree().set_network_peer(peer)

@@ -2,7 +2,7 @@ extends Node
 
 
 const SERVER_PORT = 1407
-const SERVER_IP = "localhost" # 35.239.181.55
+const SERVER_IP = "34.68.78.182" # 34.68.78.182
 
 
 func _on_StartButton_pressed():

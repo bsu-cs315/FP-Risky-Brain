@@ -18,5 +18,5 @@ steps:
   args: ['compute', 'scp', '--zone=us-central1-a', '/workspace/project-server/build/linux/server.pck', 'root@risky-brain-server:/home/kadedentel']
 - name: 'gcr.io/cloud-builders/gcloud' 
   args: ['compute', 'instances', 'stop', '--zone=us-central1-a', 'risky-brain-server']
-- name: 'gcr.io/cloud-builders/gcloud' 
+- name: 'gcr.io/cloud-builders/gcloud'
   args: ['compute', 'instances', 'start', '--zone=us-central1-a', 'risky-brain-server']
