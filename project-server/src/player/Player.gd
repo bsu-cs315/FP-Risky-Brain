@@ -7,13 +7,13 @@ export var movement_speed: float = 250.0
 export var health: int = 100
 export var player_id:= 1
 
-var inputs : Dictionary
+var inputs_to_be_processed : Array
+var last_processed_input_id := 0
 var inventory:= Inventory.new()
 var currency:= 0
 var alive: bool = true
 var movement_dir: Vector2 = Vector2(0.0, 0.0)
 var velocity : Vector2
-var mouse_pos: Vector2
 var shoot_dir: Vector2
 
 onready var current_weapon: Weapon
@@ -21,7 +21,7 @@ onready var bullet: Resource = load("res://src/weapons/Bullet.tscn")
 
 
 remote func send_player_inputs(data: Dictionary):
-	inputs = data
+	inputs_to_be_processed.append(data)
 
 
 func _ready():
@@ -31,18 +31,21 @@ func _ready():
 
 
 func _physics_process(delta):
+	if inputs_to_be_processed.empty():
+		return
 	move()
 	# move this player on all clients
-	rpc("send_puppet_inputs", inputs)
-	rpc("validate_movements", position, rotation)
+	rpc("send_puppet_inputs", inputs_to_be_processed[0])
+	if not inputs_to_be_processed.empty():
+		rpc("validate_movements", position, rotation, inputs_to_be_processed[0].id)
+	# remove what we just used
+	inputs_to_be_processed.pop_front()
 
 
 func move() -> void:
-	if inputs.empty():
-		return
+	var inputs : Dictionary = inputs_to_be_processed[0]
 	movement_dir = Vector2.ZERO
-	mouse_pos = inputs.mouse_pos
-	shoot_dir = position.direction_to(mouse_pos)
+	shoot_dir = position.direction_to(inputs.mouse_pos)
 	if inputs.left:
 		movement_dir.x -= 1.0
 	if inputs.right:

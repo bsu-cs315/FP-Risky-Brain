@@ -7,22 +7,20 @@ export var health: int = 100
 export var player_id:= 1
 
 var owner_inputs : Dictionary
+var past_player_inputs:= {}
 var puppet_inputs : Dictionary
 var inventory:= Inventory.new()
 var currency:= 0
-var alive: bool = true
+var alive:= true
 var movement_dir: Vector2 = Vector2(0.0, 0.0)
 var velocity : Vector2
 var mouse_pos: Vector2
 var shoot_dir: Vector2
 
+
+onready var camera:= Camera2D.new()
 onready var current_weapon: Weapon
 onready var bullet: Resource = load("res://src/weapons/Bullet.tscn")
-var camera : Camera2D = Camera2D.new()
-
-
-remote func send_puppet_inputs(inputs: Dictionary):
-	puppet_inputs = inputs
 
 
 func _ready():
@@ -32,7 +30,7 @@ func _ready():
 	change_weapon_sprite()
 	if name == "SinglePlayer" || is_network_master():
 		camera.current = true
-		camera.zoom = Vector2(1, 1)
+		camera.zoom = Vector2(.5, .5)
 		add_child(camera)
 
 
@@ -44,6 +42,7 @@ func _physics_process(delta: float) -> void:
 	if str(get_tree().get_network_unique_id()) == name:
 		#I am controlling this player, move based on my inputs
 		owner_inputs = get_inputs()
+		past_player_inputs[OS.get_ticks_msec()] = owner_inputs
 		move(owner_inputs)
 		rpc_id(1, "send_player_inputs", owner_inputs)
 	else:
@@ -51,15 +50,31 @@ func _physics_process(delta: float) -> void:
 		move(puppet_inputs)
 
 
-remote func validate_movements(pos: Vector2, rot: float):
-	if pos != position:
-		position = pos
-	if rot != rotation:
-		rotation = rot
+remote func send_puppet_inputs(inputs: Dictionary):
+	puppet_inputs = inputs
 
+
+remote func validate_movements(pos: Vector2, rot: float, last_accepted_input_id: int) -> void:
+	if past_player_inputs.size() == 0:
+		return
+	# remove everything BEFORE or same as last accepted
+	for id in past_player_inputs.keys():
+		if id <= last_accepted_input_id:
+			past_player_inputs.erase(id)
+		else:
+			break
+	reapply_inputs(last_accepted_input_id, pos, rot)
+
+	
+func reapply_inputs(last_accepted_input_id: int, pos: Vector2, rot: float):
+	position = pos
+	for id in past_player_inputs.keys():
+		move_and_slide(get_movement_dir(past_player_inputs[id]) * movement_speed)
+		
 
 func get_inputs() -> Dictionary:
 	var inputs : Dictionary = {
+		id = OS.get_ticks_msec(),
 		left = Input.is_action_pressed("game_left"),
 		right = Input.is_action_pressed("game_right"),
 		up = Input.is_action_pressed("game_up"),
@@ -72,15 +87,10 @@ func get_inputs() -> Dictionary:
 	}
 	
 	return inputs
-	
-	
 
-func move(inputs: Dictionary) -> void:
-	if inputs.empty():
-		return
+
+func get_movement_dir(inputs: Dictionary) -> Vector2:
 	movement_dir = Vector2.ZERO
-	mouse_pos = inputs.mouse_pos
-	shoot_dir = position.direction_to(mouse_pos)
 	if inputs.left:
 		movement_dir.x -= 1.0
 	if inputs.right:
@@ -89,6 +99,29 @@ func move(inputs: Dictionary) -> void:
 		movement_dir.y -= 1.0
 	if inputs.down:
 		movement_dir.y += 1.0
+	return movement_dir.normalized()
+
+
+func get_pos(inputs: Dictionary, pos: Vector2) -> Vector2:
+	var movement_dir:= get_movement_dir(inputs)
+	pos += movement_dir * movement_speed * get_physics_process_delta_time()
+	return pos
+	
+
+func get_rot(inputs: Dictionary, pos: Vector2) -> float:
+	return get_shoot_dir(inputs, pos).angle() - (PI/2)
+
+
+func get_shoot_dir(inputs: Dictionary, pos: Vector2) -> Vector2:
+	return pos.direction_to(inputs.mouse_pos)
+
+
+# actually moves player
+func move(inputs: Dictionary) -> void:
+	if inputs.empty():
+		return
+	movement_dir = get_movement_dir(inputs)
+	shoot_dir = get_shoot_dir(inputs, position)
 	if inputs.primary:
 		current_weapon = inventory.primary
 		change_weapon_sprite()
@@ -100,10 +133,8 @@ func move(inputs: Dictionary) -> void:
 			current_weapon.shoot()
 	if inputs.reload:
 		current_weapon.reload()
-	rotation = shoot_dir.angle() - (PI / 2)
-	movement_dir = movement_dir.normalized()
-	velocity = movement_dir * movement_speed
-	move_and_slide(velocity)
+	rotation = get_rot(inputs, position)
+	move_and_slide(movement_dir * movement_speed)
 
 
 func change_weapon_sprite():
@@ -125,9 +156,8 @@ func cast_weapon_collider():
 
 
 func weapon_can_fire() -> bool:
-	if $RayCast2D.is_colliding():
-		return false
-	return true
+	return not $RayCast2D.is_colliding()
+
 
 func take_damage(damage: int, area: Area2D, _attacker: Node) -> bool:
 	var took_damage: bool = false

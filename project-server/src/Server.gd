@@ -27,7 +27,7 @@ func _player_connected(id):
 func _player_disconnected(id):
 	print("player %d disconnected" % id)
 	player_info.erase(id)
-	if id in players_in_game:
+	if id in players_in_game.keys():
 		get_node("/root/World/Players").remove_child(players_in_game[id])
 	if players_in_game.size() == 0:
 		end_game()
