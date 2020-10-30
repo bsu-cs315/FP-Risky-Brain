@@ -9,6 +9,8 @@ export var player_id:= 1
 var owner_inputs : Dictionary
 var past_player_inputs:= {}
 var puppet_inputs : Dictionary
+var puppet_position := Vector2.ZERO
+var puppet_rotation := 0.0
 var inventory:= Inventory.new()
 var currency:= 0
 var alive:= true
@@ -47,11 +49,14 @@ func _physics_process(delta: float) -> void:
 		rpc_id(1, "send_player_inputs", owner_inputs)
 	else:
 		#I am not in control of this player, move based on server input
-		move(puppet_inputs)
+		position = puppet_position
+		rotation = puppet_rotation
 
 
-remote func send_puppet_inputs(inputs: Dictionary):
+remote func send_puppet_data(inputs: Dictionary, pos: Vector2, rot: float):
 	puppet_inputs = inputs
+	puppet_position = pos
+	puppet_rotation = rot
 
 
 remote func validate_movements(pos: Vector2, rot: float, last_accepted_input_id: int) -> void:

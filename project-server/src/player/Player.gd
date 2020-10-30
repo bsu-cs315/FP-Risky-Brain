@@ -35,7 +35,7 @@ func _physics_process(delta):
 		return
 	move()
 	# move this player on all clients
-	rpc("send_puppet_inputs", inputs_to_be_processed[0])
+	rpc("send_puppet_data", inputs_to_be_processed[0], position, rotation)
 	if not inputs_to_be_processed.empty():
 		rpc("validate_movements", position, rotation, inputs_to_be_processed[0].id)
 	# remove what we just used
