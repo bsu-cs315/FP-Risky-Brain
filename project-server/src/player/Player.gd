@@ -31,8 +31,6 @@ func _ready():
 
 
 func _physics_process(delta):
-	if Server.server.is_listening():
-		Server.server.poll()
 	if inputs_to_be_processed.empty():
 		return
 	move()

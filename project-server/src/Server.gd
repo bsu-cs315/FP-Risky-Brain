@@ -9,11 +9,13 @@ var server : WebSocketServer
 func _ready():
 	get_tree().connect("network_peer_connected", self, "_player_connected")
 	get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
-	
 	server = WebSocketServer.new()
 	server.listen(SERVER_PORT, PoolStringArray(), true)
 	get_tree().set_network_peer(server)
 
+func _physics_process(delta):
+	if server.is_listening():
+		server.poll()
 
 var players_in_game : Dictionary # Player Nodes
 var player_info = { }
@@ -33,10 +35,12 @@ func _player_disconnected(id):
 	
 
 remote func register_player(info: Dictionary):
+	print("registered")
 	player_info[get_tree().get_rpc_sender_id()] = info
 
 
 remote func start_game():
+	print("Starting game")
 	if not get_node("/root/World"): # if not game already started
 		rpc("configure_multiplayer_game", player_info)
 	

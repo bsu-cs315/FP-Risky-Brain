@@ -1,7 +1,7 @@
 extends Node
 
 const SERVER_PORT = 1407
-const SERVER_URL = "ws://35.239.181.55:1407"
+const SERVER_URL = "wss://35.239.181.55:1407"
 #const SERVER_URL = "ws://127.0.0.1:1407"
 
 var client : WebSocketClient
@@ -11,6 +11,11 @@ func _ready():
 	get_tree().connect("connected_to_server", self, "_connected_ok")
 	get_tree().connect("connection_failed", self, "_connected_fail")
 	get_tree().connect("server_disconnected", self, "_server_disconnected")
+
+
+func _physics_process(delta: float) -> void:
+	if Server.client != null && Server.client.get_connection_status() == NetworkedMultiplayerPeer.CONNECTION_CONNECTED:
+		Server.client.poll()
 
 
 var player_info = { }

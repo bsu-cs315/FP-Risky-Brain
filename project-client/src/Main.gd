@@ -1,8 +1,9 @@
 extends Node2D
 
 
-var floors = $Floor as TileMap
 var dirt_particles = preload("res://src/effects/DirtParticles.tscn").instance()
+
+onready var floors: TileMap = $Floor
 	
 func _ready():
 	add_child(dirt_particles)
