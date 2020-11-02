@@ -37,6 +37,8 @@ func _ready():
 
 
 func _physics_process(delta: float) -> void:
+	if Server.client.get_connection_status() == NetworkedMultiplayerPeer.CONNECTION_CONNECTED:
+		Server.client.poll()
 	if name == "SinglePlayer":
 		owner_inputs = get_inputs()
 		move(owner_inputs)

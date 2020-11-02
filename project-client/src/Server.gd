@@ -1,5 +1,11 @@
 extends Node
 
+const SERVER_PORT = 1407
+const SERVER_URL = "ws://35.239.181.55:1407"
+#const SERVER_URL = "ws://127.0.0.1:1407"
+
+var client : WebSocketClient
+
 
 func _ready():
 	get_tree().connect("connected_to_server", self, "_connected_ok")
@@ -22,6 +28,13 @@ func _connected_fail():
 func _server_disconnected():
 	print("Server kicked us")
 
+func connect_to_server():
+	client = WebSocketClient.new()
+	var create_client_error = client.connect_to_url(SERVER_URL, PoolStringArray(), true)
+	if create_client_error != OK:
+		print(create_client_error)
+		return 
+	get_tree().network_peer = client
 
 remotesync func configure_multiplayer_game(info: Dictionary):
 	player_info = info
