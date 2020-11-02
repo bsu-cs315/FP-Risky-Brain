@@ -59,7 +59,7 @@ remote func send_puppet_data(inputs: Dictionary, pos: Vector2, rot: float):
 	puppet_rotation = rot
 
 
-remote func validate_movements(pos: Vector2, rot: float, last_accepted_input_id: int) -> void:
+remote func validate_movements(pos: Vector2, last_accepted_input_id: int) -> void:
 	if past_player_inputs.size() == 0:
 		return
 	# remove everything BEFORE or same as last accepted
@@ -68,10 +68,10 @@ remote func validate_movements(pos: Vector2, rot: float, last_accepted_input_id:
 			past_player_inputs.erase(id)
 		else:
 			break
-	reapply_inputs(last_accepted_input_id, pos, rot)
+	reapply_inputs(pos)
 
 	
-func reapply_inputs(last_accepted_input_id: int, pos: Vector2, rot: float):
+func reapply_inputs(pos: Vector2):
 	position = pos
 	for id in past_player_inputs.keys():
 		move_and_slide(get_movement_dir(past_player_inputs[id]) * movement_speed)
@@ -139,7 +139,8 @@ func move(inputs: Dictionary) -> void:
 	if inputs.reload:
 		current_weapon.reload()
 	rotation = get_rot(inputs, position)
-	move_and_slide(movement_dir * movement_speed)
+	velocity = movement_dir * movement_speed
+	move_and_slide(velocity)
 
 
 func change_weapon_sprite():
