@@ -1,0 +1,17 @@
+extends Weapon
+
+
+func _init(player: Node) -> void:
+	damage = 1
+	bullet = load("res://src/weapons/Bullet.tscn")
+	ammo_total_max = 48
+	ammo_total_current = ammo_total_max
+	ammo_mag_max = 12
+	ammo_mag_current = ammo_mag_max
+	bullet_speed = 1000
+	shot_cooldown = 0.15
+	shooter = player
+	max_lifetime = 1.0
+	shoot_point_node = player.get_node("Body/PistolShootPoint")
+	player_body_sprite = load("res://assets/visual/player/player_body_pistol.png")
+
