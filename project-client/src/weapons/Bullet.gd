@@ -50,6 +50,5 @@ func handle_collision(collision: Object):
 			owner.take_damage(damage, collision, shooter)
 			queue_free()
 		return
-	if collision is TileMap:
-		if collision.name == "Walls":
-			queue_free()
+	if collision.get_collision_layer_bit(2): #collide with walls
+		queue_free()

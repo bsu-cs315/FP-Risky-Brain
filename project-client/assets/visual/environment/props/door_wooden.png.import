@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/concrete_tile.png-906370d5399c0abbe66ae491e8405ac2.stex"
+path="res://.import/door_wooden.png-f68964d36936223aef97457f9cb6f3b6.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/visual/environment/concrete_tile.png"
-dest_files=[ "res://.import/concrete_tile.png-906370d5399c0abbe66ae491e8405ac2.stex" ]
+source_file="res://assets/visual/environment/props/door_wooden.png"
+dest_files=[ "res://.import/door_wooden.png-f68964d36936223aef97457f9cb6f3b6.stex" ]
 
 [params]
 

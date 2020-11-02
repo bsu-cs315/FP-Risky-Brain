@@ -2,8 +2,8 @@ extends Node
 
 
 const SERVER_PORT = 1407
-#const SERVER_IP = "35.239.181.55"
-const SERVER_IP = "localhost"
+const SERVER_IP = "35.239.181.55"
+#const SERVER_IP = "localhost"
 
 func _on_StartButton_pressed():
 	Server.rpc_id(1, "start_game")

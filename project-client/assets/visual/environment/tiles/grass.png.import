@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/brickwall.png-6ef245f6c25b86e62d13c601f3c7beb6.stex"
+path="res://.import/grass.png-c5691fefc9521c7ca8831084b00a665c.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/visual/environment/brickwall.png"
-dest_files=[ "res://.import/brickwall.png-6ef245f6c25b86e62d13c601f3c7beb6.stex" ]
+source_file="res://assets/visual/environment/tiles/grass.png"
+dest_files=[ "res://.import/grass.png-c5691fefc9521c7ca8831084b00a665c.stex" ]
 
 [params]
 
