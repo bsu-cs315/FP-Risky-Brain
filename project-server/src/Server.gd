@@ -1,6 +1,6 @@
 extends Node
 
-const SERVER_PORT = 1407
+const SERVER_PORT = 403
 const MAX_PLAYERS = 20
 
 var server : WebSocketServer
@@ -10,6 +10,8 @@ func _ready():
 	get_tree().connect("network_peer_connected", self, "_player_connected")
 	get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
 	server = WebSocketServer.new()
+	#SSL CERTIFICATION
+	var crypto = CryptoKey
 	server.listen(SERVER_PORT, PoolStringArray(), true)
 	get_tree().set_network_peer(server)
 
