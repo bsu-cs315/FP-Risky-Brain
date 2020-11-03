@@ -1,6 +1,6 @@
 extends Node
 
-const SERVER_URL = "wss://35.239.181.55:403"
+const SERVER_URL = "wss://kadedentel.com:403"
 #const SERVER_URL = "ws://localhost:403"
 
 var client : WebSocketClient
@@ -36,7 +36,7 @@ func connect_to_server():
 	client = WebSocketClient.new()
 	var create_client_error = client.connect_to_url(SERVER_URL, PoolStringArray(), true)
 	if create_client_error != OK:
-		print(create_client_error)
+		print("Create client error: " + str(create_client_error))
 		return 
 	get_tree().network_peer = client
 
