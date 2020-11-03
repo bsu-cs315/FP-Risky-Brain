@@ -1,7 +1,7 @@
 extends Node
 
-const SERVER_URL = "ws://35.239.181.55:403"
-#const SERVER_URL = "ws://127.0.0.1:403"
+const SERVER_URL = "wss://35.239.181.55:403"
+#const SERVER_URL = "ws://localhost:403"
 
 var client : WebSocketClient
 

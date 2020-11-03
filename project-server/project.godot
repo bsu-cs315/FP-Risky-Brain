@@ -81,6 +81,10 @@ game_fire={
 2d_physics/layer_4="Environment"
 2d_physics/layer_5="Bullet"
 
+[network]
+
+ssl/certificates="res://assets/certs/fullchain.pem"
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"
