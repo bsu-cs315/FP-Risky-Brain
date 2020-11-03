@@ -11,12 +11,19 @@ func _ready():
 	get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
 	server = WebSocketServer.new()
 	var cert : X509Certificate = X509Certificate.new()
-	var err = cert.load("res://assets/certs/fullchain.pem")
-	if err != OK:
-		print(err)
+	var load_cert_err = cert.load("res://assets/certs/fullchain.pem")
+	if load_cert_err != OK:
+		print("Loading cert error: " + str(load_cert_err))
 	else:
-		print("Server using ssl")
+		print("Server set certificate")
 		server.ssl_certificate = cert
+	var key : CryptoKey = CryptoKey.new()
+	var load_key_err = key.load("/home/kadedentel/privkey.pem")
+	if load_key_err != OK:
+		print("Loading key error: " + str(load_key_err))
+	else:
+		server.private_key = key
+		print("Server set private key")
 	server.listen(SERVER_PORT, PoolStringArray(), true)
 	get_tree().set_network_peer(server)
 

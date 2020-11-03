@@ -11,7 +11,7 @@ steps:
   args: ["mv", "/root/.local/share/godot/templates/3.2.2.stable", "/builder/home/.local/share/godot/templates/3.2.2.stable"]
   timeout: 30s        
 - name: "barichello/godot-ci:3.2.2"
-  args: ["godot", "-v", "--export", "Linux/X11", "build/linux/server.x86_64"]
+  args: ["godot", "-v", "--export-debug", "Linux/X11", "build/linux/server.x86_64"]
   dir: "project-server"
   timeout: 120s
 - name: 'gcr.io/cloud-builders/gcloud' 
