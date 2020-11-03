@@ -10,8 +10,12 @@ func _ready():
 	get_tree().connect("network_peer_connected", self, "_player_connected")
 	get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
 	server = WebSocketServer.new()
-	var cert : X509Certificate = load("res://assets/certs/fullchain.pem")
-	if cert != null:
+	var cert : X509Certificate = X509Certificate.new()
+	var err = cert.load("res://assets/certs/fullchain.pem")
+	if err != OK:
+		print(err)
+	else:
+		print("Server using ssl")
 		server.ssl_certificate = cert
 	server.listen(SERVER_PORT, PoolStringArray(), true)
 	get_tree().set_network_peer(server)
