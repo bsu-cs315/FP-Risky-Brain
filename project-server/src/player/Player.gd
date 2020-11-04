@@ -44,8 +44,25 @@ func _physics_process(delta):
 
 func move() -> void:
 	var inputs : Dictionary = inputs_to_be_processed[0]
+	if inputs.empty():
+		return
+	movement_dir = get_movement_dir(inputs)
+	shoot_dir = get_shoot_dir(inputs, position)
+	if inputs.primary:
+		current_weapon = inventory.primary
+	if inputs.secondary:
+		current_weapon = inventory.secondary
+	if inputs.fire:
+		if weapon_can_fire():
+			current_weapon.shoot()
+	if inputs.reload:
+		current_weapon.reload()
+	rotation = get_rot(inputs, position)
+	move_and_slide(movement_dir * movement_speed)
+
+
+func get_movement_dir(inputs: Dictionary) -> Vector2:
 	movement_dir = Vector2.ZERO
-	shoot_dir = position.direction_to(inputs.mouse_pos)
 	if inputs.left:
 		movement_dir.x -= 1.0
 	if inputs.right:
@@ -54,15 +71,17 @@ func move() -> void:
 		movement_dir.y -= 1.0
 	if inputs.down:
 		movement_dir.y += 1.0
-	if inputs.primary:
-		current_weapon = inventory.primary
-	if inputs.secondary:
-		current_weapon = inventory.secondary
-	if inputs.fire:
-		current_weapon.shoot()
-	if inputs.reload:
-		current_weapon.reload()
-	rotation = shoot_dir.angle() - (PI / 2)
-	movement_dir = movement_dir.normalized()
-	velocity = movement_dir * movement_speed
-	move_and_slide(velocity)
+	return movement_dir.normalized()
+
+
+func get_shoot_dir(inputs: Dictionary, pos: Vector2) -> Vector2:
+	return pos.direction_to(inputs.mouse_pos)
+
+
+func get_rot(inputs: Dictionary, pos: Vector2) -> float:
+	return get_shoot_dir(inputs, pos).angle() - (PI/2)
+
+
+func weapon_can_fire() -> bool:
+	$RayCast2D.cast_to = Vector2(current_weapon.shoot_point_node.position.x, current_weapon.shoot_point_node.position.y)
+	return not $RayCast2D.is_colliding()
