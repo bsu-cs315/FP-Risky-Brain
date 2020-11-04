@@ -62,21 +62,22 @@ remote func send_puppet_data(inputs: Dictionary, pos: Vector2, rot: float):
 	puppet_rotation = rot
 
 
-remote func validate_movements(pos: Vector2, last_accepted_input_id: int) -> void:
+remote func validate_movements(server_pos: Vector2, last_accepted_input_id: int) -> void:
 	if past_player_inputs.size() != 0:
-		reapply_inputs(pos, last_accepted_input_id)
+		past_player_inputs[last_accepted_input_id]
+		var player_pos_for_id : Vector2 = past_player_positions[last_accepted_input_id]
+		if abs(server_pos.x - player_pos_for_id.x) > 1 || abs(server_pos.y - player_pos_for_id.y) > 1:
+			reconciliate(server_pos, last_accepted_input_id)
+		# clear player inputs and positions older than last accepted
+		for id in past_player_inputs.keys():
+			if id < last_accepted_input_id:
+				past_player_inputs.erase(id)
+				past_player_positions.erase(id)
 
 
-func reapply_inputs(server_pos: Vector2, last_accepted_input_id: int) -> void:
-	past_player_inputs[last_accepted_input_id]
-	var player_pos_for_id : Vector2 = past_player_positions[last_accepted_input_id]
-	if server_pos.abs() - player_pos_for_id.abs() > Vector2(1, 1):
+func reconciliate(server_pos: Vector2, last_accepted_input_id: int) -> void:
+		print("Corrected player position")
 		position = server_pos
-	# clear player inputs and positions older than last accepted
-	for id in past_player_inputs.keys():
-		if id < last_accepted_input_id:
-			past_player_inputs.erase(id)
-			past_player_positions.erase(id)
 
 
 func get_inputs(timestamp: int) -> Dictionary:
@@ -113,7 +114,8 @@ func move(inputs: Dictionary) -> void:
 	if inputs.reload:
 		current_weapon.reload()
 	rotation = get_rot(inputs, position)
-	move_and_slide(movement_dir * movement_speed)
+	velocity = movement_dir * movement_speed #need velocity of player
+	move_and_slide(velocity)
 
 
 func get_movement_dir(inputs: Dictionary) -> Vector2:
