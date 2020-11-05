@@ -4,15 +4,16 @@ const SERVER_URL = "wss://kadedentel.com:403"
 #const SERVER_URL = "ws://localhost:403"
 
 var client : WebSocketClient
+var is_network_connected := false
 
 
-func _ready():
-	get_tree().connect("connected_to_server", self, "_connected_ok")
-	get_tree().connect("connection_failed", self, "_connected_fail")
-	get_tree().connect("server_disconnected", self, "_server_disconnected")
+func _ready() -> void:
+	var _err_func_conn_to_server = get_tree().connect("connected_to_server", self, "_connected_ok")
+	var _err_func_conn_failed = get_tree().connect("connection_failed", self, "_connected_fail")
+	var _err_func_disconn_from_server = get_tree().connect("server_disconnected", self, "_server_disconnected")
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if Server.client != null && Server.client.get_connection_status() == NetworkedMultiplayerPeer.CONNECTION_CONNECTED:
 		Server.client.poll()
 
@@ -20,19 +21,21 @@ func _physics_process(delta: float) -> void:
 var player_info = { }
 
 
-func _connected_ok():
-	print("Connected to server")
+func _connected_ok() -> void:
+	is_network_connected = true
 	rpc_id(1, "register_player", {position = Vector2.ZERO})
 
 
-func _connected_fail():
+func _connected_fail() -> void:
 	print("Could not connect to server")
 	
 
-func _server_disconnected():
+func _server_disconnected() -> void:
+	is_network_connected = false
 	print("Server kicked us")
 
-func connect_to_server():
+
+func connect_to_server() -> void:
 	client = WebSocketClient.new()
 	var create_client_error = client.connect_to_url(SERVER_URL, PoolStringArray(), true)
 	if create_client_error != OK:
@@ -40,9 +43,9 @@ func connect_to_server():
 		return 
 	get_tree().network_peer = client
 
-remotesync func configure_multiplayer_game(info: Dictionary):
+
+remotesync func configure_multiplayer_game(info: Dictionary) -> void:
 	player_info = info
-	var self_peer_id = get_tree().get_network_unique_id()
 
 	get_node("/root/LobbyMenu").queue_free()
 	# Load world
@@ -58,7 +61,7 @@ remotesync func configure_multiplayer_game(info: Dictionary):
 	PlayerInfo.get_player_nodes()
 
 
-func configure_singleplayer_game():
+func configure_singleplayer_game() -> void:
 	get_node("/root/Title").queue_free()
 	var world = load("res://src/Main.tscn").instance()
 	get_node("/root").add_child(world)

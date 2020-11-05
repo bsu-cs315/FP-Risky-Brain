@@ -1,10 +1,11 @@
 extends KinematicBody2D
 
-var opened = false
-var start_rot = rotation
+
+var opened := false
+var start_rot := rotation
 
 
-func _process(delta):
+func _process(delta) -> void:
 	if rotation != start_rot + PI:
 		unlock(PI, delta)
 

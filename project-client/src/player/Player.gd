@@ -10,8 +10,8 @@ var owner_inputs : Dictionary
 var past_player_inputs:= {}
 var past_player_positions := {}
 var puppet_inputs : Dictionary
-var puppet_position := Vector2.ZERO
-var puppet_rotation := 0.0
+var puppet_position:= Vector2.ZERO
+var puppet_rotation:= 0.0
 var inventory:= Inventory.new()
 var currency:= 0
 var alive:= true
@@ -26,7 +26,7 @@ onready var current_weapon: Weapon
 onready var bullet: Resource = load("res://src/weapons/Bullet.tscn")
 
 
-func _ready():
+func _ready() -> void:
 	inventory.primary = load("res://src/weapons/Shotgun.gd").new(self)
 	inventory.secondary = load("res://src/weapons/Pistol.gd").new(self)
 	current_weapon = inventory.primary
@@ -37,7 +37,7 @@ func _ready():
 		add_child(camera)
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if name == "SinglePlayer":
 		owner_inputs = get_inputs(0)
 		move(owner_inputs)
@@ -51,32 +51,30 @@ func _physics_process(delta: float) -> void:
 		past_player_positions[timestamp] = position
 		rpc_id(1, "send_player_inputs", owner_inputs)
 	else:
-		#I am not in control of this player, move based on server input
+		#I'm not controlling player, move based on server pos, rot
 		position = puppet_position
 		rotation = puppet_rotation
 
-
-remote func send_puppet_data(inputs: Dictionary, pos: Vector2, rot: float):
+# in this case, the puppets are team members of the actively-controlled player
+remote func send_puppet_data(inputs: Dictionary, pos: Vector2, rot: float) -> void:
 	puppet_inputs = inputs
 	puppet_position = pos
 	puppet_rotation = rot
 
-
+# server validates client position
 remote func validate_movements(server_pos: Vector2, last_accepted_input_id: int) -> void:
 	if past_player_inputs.size() != 0:
-		past_player_inputs[last_accepted_input_id]
 		var player_pos_for_id : Vector2 = past_player_positions[last_accepted_input_id]
 		if abs(server_pos.x - player_pos_for_id.x) > 1 || abs(server_pos.y - player_pos_for_id.y) > 1:
 			reconciliate(server_pos, last_accepted_input_id)
 		# clear player inputs and positions older than last accepted
 		for id in past_player_inputs.keys():
 			if id < last_accepted_input_id:
-				past_player_inputs.erase(id)
-				past_player_positions.erase(id)
+				var _erased_input = past_player_inputs.erase(id)
+				var _erased_pos = past_player_positions.erase(id)
 
 
-func reconciliate(server_pos: Vector2, last_accepted_input_id: int) -> void:
-		print("Corrected player position")
+func reconciliate(server_pos: Vector2, _last_accepted_input_id: int) -> void:
 		position = server_pos
 
 
@@ -115,7 +113,7 @@ func move(inputs: Dictionary) -> void:
 		current_weapon.reload()
 	rotation = get_rot(inputs, position)
 	velocity = movement_dir * movement_speed #need velocity of player
-	move_and_slide(velocity)
+	var _linear_velocity = move_and_slide(velocity)
 
 
 func get_movement_dir(inputs: Dictionary) -> Vector2:
@@ -149,6 +147,7 @@ func change_weapon_sprite() -> void:
 
 
 func add_currency(amount: int) -> void:
+	assert(amount >= 0)
 	currency += amount
 
 

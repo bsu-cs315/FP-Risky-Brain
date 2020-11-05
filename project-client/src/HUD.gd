@@ -1,14 +1,10 @@
 extends CanvasLayer
 
 
-var playerNode: Node2D
+onready var playerNode:= get_parent()
 
 
-func _ready():
-	playerNode = get_parent()
-
-
-func _process(delta):
+func _process(_delta) -> void:
 	if "SinglePlayer" == playerNode.name || str(get_tree().get_network_unique_id()) == playerNode.name:
 		$Control.show()
 		$Control/HealthBar.value = playerNode.health

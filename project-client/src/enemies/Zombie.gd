@@ -28,7 +28,7 @@ func find_player() -> void:
 
 func move_toward_player() -> void:
 	movement_dir = position.direction_to(target.position)
-	move_and_slide(movement_dir * movement_speed)
+	var _linear_velocity = move_and_slide(movement_dir * movement_speed)
 	rotation = movement_dir.angle() - (PI / 2)
 	
 
@@ -57,7 +57,7 @@ func die() -> void:
 	queue_free()
 
 
-func _on_AttackArea_area_entered(area):
+func _on_AttackArea_area_entered(area) -> void:
 	var owner: Node = area.owner
 	if owner == null:
 		return
@@ -67,7 +67,7 @@ func _on_AttackArea_area_entered(area):
 		areas_to_damage.append(area)
 
 
-func _on_AttackArea_area_exited(area):
+func _on_AttackArea_area_exited(area) -> void:
 	var owner: Node = area.owner
 	if owner == null:
 		return
@@ -77,6 +77,6 @@ func _on_AttackArea_area_exited(area):
 		areas_to_damage.remove(areas_to_damage.find(area))
 
 
-func _on_AttackTimer_timeout():
+func _on_AttackTimer_timeout() -> void:
 	for area in areas_to_damage:
 		area.owner.take_damage(damage, area, self)
