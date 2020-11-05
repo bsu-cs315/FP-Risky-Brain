@@ -38,6 +38,7 @@ remotesync func configure_multiplayer_game(info: Dictionary):
 		player.set_name(str(p))
 		player.set_network_master(p)
 		get_node("/root/World/Players").add_child(player)
+		player.position = get_node("/root/World/PlayerSpawnPoint").position
 	PlayerInfo.get_player_nodes()
 
 
@@ -48,4 +49,5 @@ func configure_singleplayer_game():
 	var player = preload("res://src/player/Player.tscn").instance()
 	player.set_name(str("SinglePlayer"))
 	get_node("/root/World/Players").add_child(player)
+	player.position = get_node("/root/World/PlayerSpawnPoint").position
 	PlayerInfo.get_player_nodes()
