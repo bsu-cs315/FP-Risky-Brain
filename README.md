@@ -4,6 +4,10 @@ A 2D game made in Godot by kade-d and adamgack.
 
 [Play Risky Brain](https://bsu-cs315.github.io/FP-Risky-Brain/)
 
+## Instructions
+
+Use `W` `A` `S` `D` to move your player. Use `left-click` to shoot. Use `R` to reload. Use `E` to interact with objects.
+
 ## Project Report
 
 ### Reflection
