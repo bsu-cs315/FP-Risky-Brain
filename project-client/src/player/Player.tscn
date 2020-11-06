@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://assets/visual/player/player_head.png" type="Texture" id=2]
 [ext_resource path="res://src/player/Player.gd" type="Script" id=3]
@@ -9,15 +9,18 @@ radius = 17.0
 
 [sub_resource type="SpriteFrames" id=2]
 animations = [ {
-"frames": [ ExtResource( 4 ), null ],
+"frames": [ ExtResource( 4 ) ],
 "loop": true,
 "name": "default",
 "speed": 5.0
 } ]
 
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 22, 25 )
+
 [sub_resource type="SpriteFrames" id=3]
 animations = [ {
-"frames": [ ExtResource( 2 ), null ],
+"frames": [ ExtResource( 2 ) ],
 "loop": true,
 "name": "default",
 "speed": 5.0
@@ -56,6 +59,12 @@ position = Vector2( -8.5, 31 )
 
 [node name="ShotgunShootPoint" type="Node2D" parent="Body"]
 position = Vector2( -9.5, 35.5 )
+
+[node name="InteractArea" type="Area2D" parent="Body"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/InteractArea"]
+position = Vector2( 0, 23.325 )
+shape = SubResource( 4 )
 
 [node name="Head" type="AnimatedSprite" parent="."]
 frames = SubResource( 3 )

@@ -13,7 +13,7 @@ var puppet_inputs : Dictionary
 var puppet_position:= Vector2.ZERO
 var puppet_rotation:= 0.0
 var inventory:= Inventory.new()
-var currency:= 0
+var currency:= 1000
 var alive:= true
 var movement_dir: Vector2 = Vector2(0.0, 0.0)
 var velocity : Vector2
@@ -89,6 +89,7 @@ func get_inputs(timestamp: int) -> Dictionary:
 		secondary = Input.is_action_just_pressed("game_secondary"),
 		fire = Input.is_action_pressed("game_fire"),
 		reload = Input.is_action_pressed("game_reload"),
+		interact = Input.is_action_just_pressed("game_interact"),
 		mouse_pos = get_global_mouse_position()
 	}
 	return inputs
@@ -111,10 +112,19 @@ func move(inputs: Dictionary) -> void:
 			current_weapon.shoot()
 	if inputs.reload:
 		current_weapon.reload()
+	if inputs.interact:
+		interact()
 	rotation = get_rot(inputs, position)
 	velocity = movement_dir * movement_speed #need velocity of player
 	var _linear_velocity = move_and_slide(velocity)
 
+
+func interact() -> void:
+	var overlapping_areas: Array = $Body/InteractArea.get_overlapping_areas()
+	for area in overlapping_areas:
+		if area.has_method("interact"):
+			area.interact(self)
+	
 
 func get_movement_dir(inputs: Dictionary) -> Vector2:
 	movement_dir = Vector2.ZERO

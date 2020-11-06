@@ -34,6 +34,7 @@ func shoot() -> void:
 func reload() -> void:
 	ammo_mag_current = int(min(ammo_mag_max, ammo_total_current))
 
+
 func decrement_ammo(amount: int) -> void:
 	ammo_mag_current -= amount
 	ammo_total_current -= amount

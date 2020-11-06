@@ -1,5 +1,6 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=23 format=2]
 
+[ext_resource path="res://src/HUD.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/visual/environment/tiles/grass.png" type="Texture" id=2]
 [ext_resource path="res://assets/visual/environment/tiles/floor.png" type="Texture" id=3]
 [ext_resource path="res://assets/visual/environment/tiles/concrete.png" type="Texture" id=4]
@@ -255,6 +256,8 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="HUD" parent="." instance=ExtResource( 1 )]
+
 [node name="Floor" type="TileMap" parent="."]
 tile_set = SubResource( 1 )
 cell_size = Vector2( 32, 32 )
@@ -280,14 +283,6 @@ __meta__ = {
 
 [node name="PlayerSpawnPoint" type="Node2D" parent="."]
 position = Vector2( 393, -70 )
-
-[node name="WoodenDoor" parent="." instance=ExtResource( 9 )]
-position = Vector2( 0, 512 )
-
-[node name="WoodenDoor2" parent="." instance=ExtResource( 9 )]
-position = Vector2( -193.325, 73.6778 )
-
-[node name="HUD" parent="." instance=ExtResource( 11 )]
 
 [node name="EnemySpawner" type="Node" parent="."]
 script = ExtResource( 10 )
@@ -470,3 +465,16 @@ scale = Vector2( 15.273, 1 )
 position = Vector2( -191.568, 993.301 )
 rotation = 4.71239
 scale = Vector2( 1, 6.785 )
+
+[node name="Doors" type="Node" parent="."]
+
+[node name="WoodenDoor" parent="Doors" instance=ExtResource( 9 )]
+position = Vector2( 0, 512 )
+cost = 10000
+open_rot = 90.0
+
+[node name="WoodenDoor2" parent="Doors" instance=ExtResource( 9 )]
+position = Vector2( 0.561218, 4 )
+rotation = -3.14159
+cost = 500
+open_rot = -270.0
