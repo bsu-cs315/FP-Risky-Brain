@@ -8,8 +8,6 @@
 [ext_resource path="res://assets/visual/environment/tiles/drywall.png" type="Texture" id=7]
 [ext_resource path="res://assets/visual/environment/tiles/tile.png" type="Texture" id=8]
 [ext_resource path="res://src/environment/props/WoodenDoor.tscn" type="PackedScene" id=9]
-[ext_resource path="res://src/Main.gd" type="Script" id=10]
-[ext_resource path="res://src/HUD.tscn" type="PackedScene" id=11]
 [ext_resource path="res://src/EnemySpawner.gd" type="Script" id=10]
 [ext_resource path="res://src/environment/boundaries/PlayerBoundary.tscn" type="PackedScene" id=11]
 [ext_resource path="res://src/environment/boundaries/EnemyBoundary.tscn" type="PackedScene" id=12]
@@ -289,9 +287,8 @@ position = Vector2( 0, 512 )
 [node name="WoodenDoor2" parent="." instance=ExtResource( 9 )]
 position = Vector2( -193.325, 73.6778 )
 
-<<<<<<< HEAD
 [node name="HUD" parent="." instance=ExtResource( 11 )]
-=======
+
 [node name="EnemySpawner" type="Node" parent="."]
 script = ExtResource( 10 )
 
@@ -473,4 +470,3 @@ scale = Vector2( 15.273, 1 )
 position = Vector2( -191.568, 993.301 )
 rotation = 4.71239
 scale = Vector2( 1, 6.785 )
->>>>>>> 5b010f5505585af675e38c292734b5de7f9a9e08
