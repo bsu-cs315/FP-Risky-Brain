@@ -6,10 +6,12 @@ var weapon_id: String
 var shooter: Node
 var damage: int
 var bullet: Resource
-var player_body_sprite: Texture
+var player_animation_name: String
 var bullet_speed: float
 var shot_cooldown: float #cooldown between shots in seconds
 var shot_cooldown_timer:= Timer.new()
+var player_sprite: AnimatedSprite
+var audio_player: AudioStreamPlayer2D
 var ammo_total_max: int
 var ammo_total_current: int
 var ammo_mag_max: int

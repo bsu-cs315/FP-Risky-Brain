@@ -2,23 +2,27 @@ extends Weapon
 
 
 var pellet_count:= 10
-var pellet_inaccuracy:= deg2rad(30.0)
+var pellet_inaccuracy:= deg2rad(20.0)
 
 
 func _init(player: Node) -> void:
 	weapon_id = "Shotgun"
-	damage = 5
+	damage = 10
 	bullet = load("res://src/weapons/Bullet.tscn")
-	player_body_sprite = load("res://assets/visual/player/player_body_shotgun.png")
-	ammo_total_max = 2000
+	player_animation_name = "shotgun"
+	ammo_total_max = 20
 	ammo_total_current = ammo_total_max
-	ammo_mag_max = 1000
+	ammo_mag_max = 5
 	ammo_mag_current = ammo_mag_max
-	shot_cooldown = 0.1
-	bullet_speed = 500
+	shot_cooldown = 1.0
+	bullet_speed = 1000
 	shooter = player
 	max_lifetime = 1.0
 	shoot_point_node = player.get_node("Body/ShotgunShootPoint")
+	player_sprite = player.get_node("Body")
+	player_sprite.connect("animation_finished", self, "stop_animation")
+	audio_player = player.get_node("WeaponAudioPlayer")
+	audio_player.stream = load("res://assets/audio/shotgun_fire.wav")
 
 
 func shoot() -> void:
@@ -34,6 +38,13 @@ func shoot() -> void:
 			proj.rotation = pellet_angle - (PI / 2)
 			shooter.get_node("/root/World").add_child(proj)
 		shot_cooldown_timer.start(shot_cooldown)
+		audio_player.play()
+		player_sprite.frame = 1
+		player_sprite.play()
 		decrement_ammo(1)
+		
+		
+func stop_animation() -> void:
+	player_sprite.stop()
 
 

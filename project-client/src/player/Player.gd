@@ -151,11 +151,7 @@ func change_current_weapon(weapon: Weapon) -> void:
 
 
 func change_weapon_sprite() -> void:
-	var frames:= SpriteFrames.new()
-	frames.add_animation("normal")
-	frames.add_frame("normal", current_weapon.player_body_sprite, 0)
-	$Body.frames = frames
-	$Body.animation = "normal"
+	$Body.animation = current_weapon.player_animation_name
 	$Body.frame = 0
 
 

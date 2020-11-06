@@ -13,5 +13,6 @@ func _init(player: Node) -> void:
 	shooter = player
 	max_lifetime = 1.0
 	shoot_point_node = player.get_node("Body/PistolShootPoint")
-	player_body_sprite = load("res://assets/visual/player/player_body_pistol.png")
+	player_sprite = player.get_node("Body")
+	player_animation_name = "pistol"
 
