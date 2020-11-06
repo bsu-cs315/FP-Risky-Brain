@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/door_wooden.png-f68964d36936223aef97457f9cb6f3b6.stex"
+path="res://.import/door_wooden.png-e6489628b30ce3ed32e9a4dc4cfeba46.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/visual/environment/props/door_wooden.png"
-dest_files=[ "res://.import/door_wooden.png-f68964d36936223aef97457f9cb6f3b6.stex" ]
+source_file="res://assets/visual/environment/interactables/door_wooden.png"
+dest_files=[ "res://.import/door_wooden.png-e6489628b30ce3ed32e9a4dc4cfeba46.stex" ]
 
 [params]
 

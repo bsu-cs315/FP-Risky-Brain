@@ -27,8 +27,7 @@ onready var bullet: Resource = load("res://src/weapons/Bullet.tscn")
 
 
 func _ready() -> void:
-	inventory.primary = load("res://src/weapons/Shotgun.gd").new(self)
-	inventory.secondary = load("res://src/weapons/Pistol.gd").new(self)
+	inventory.primary = load("res://src/weapons/Pistol.gd").new(self)
 	current_weapon = inventory.primary
 	change_weapon_sprite()
 	if name == "SinglePlayer" || is_network_master():
@@ -102,11 +101,10 @@ func move(inputs: Dictionary) -> void:
 	movement_dir = get_movement_dir(inputs)
 	shoot_dir = get_shoot_dir(inputs, position)
 	if inputs.primary:
-		current_weapon = inventory.primary
-		change_weapon_sprite()
+		change_current_weapon(inventory.primary)
 	if inputs.secondary:
-		current_weapon = inventory.secondary
-		change_weapon_sprite()
+		if inventory.secondary != null:
+			change_current_weapon(inventory.secondary)
 	if inputs.fire:
 		if weapon_can_fire():
 			current_weapon.shoot()
@@ -145,6 +143,11 @@ func get_shoot_dir(inputs: Dictionary, pos: Vector2) -> Vector2:
 
 func get_rot(inputs: Dictionary, pos: Vector2) -> float:
 	return get_shoot_dir(inputs, pos).angle() - (PI/2)
+
+
+func change_current_weapon(weapon: Weapon) -> void:
+	current_weapon = weapon
+	change_weapon_sprite()
 
 
 func change_weapon_sprite() -> void:

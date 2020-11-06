@@ -10,7 +10,7 @@ func _init(player: Node) -> void:
 	damage = 5
 	bullet = load("res://src/weapons/Bullet.tscn")
 	player_body_sprite = load("res://assets/visual/player/player_body_shotgun.png")
-	ammo_total_max = 1000
+	ammo_total_max = 2000
 	ammo_total_current = ammo_total_max
 	ammo_mag_max = 1000
 	ammo_mag_current = ammo_mag_max
@@ -19,7 +19,6 @@ func _init(player: Node) -> void:
 	shooter = player
 	max_lifetime = 1.0
 	shoot_point_node = player.get_node("Body/ShotgunShootPoint")
-	print("shot")
 
 
 func shoot() -> void:

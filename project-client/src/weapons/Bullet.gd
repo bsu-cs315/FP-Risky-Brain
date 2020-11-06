@@ -42,10 +42,8 @@ func _physics_process(delta: float) -> void:
 
 
 func handle_collision(collision: Object):
-	if collision is Area2D:
-		var owner: Node = collision.owner
-		if owner == null:
-			return
+	var owner: Node = collision.owner
+	if collision is Area2D and owner.has_method("take_damage"):
 		if owner.has_method("take_damage"):
 			owner.take_damage(damage, collision, shooter)
 			queue_free()

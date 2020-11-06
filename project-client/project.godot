@@ -103,6 +103,7 @@ game_reload={
 2d_physics/layer_4="Environment"
 2d_physics/layer_5="Bullet"
 2d_physics/layer_6="Boundary"
+2d_physics/layer_7="Interactable"
 
 [rendering]
 
