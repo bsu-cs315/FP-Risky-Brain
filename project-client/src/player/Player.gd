@@ -32,7 +32,7 @@ func _ready() -> void:
 	change_weapon_sprite()
 	if name == "SinglePlayer" || is_network_master():
 		camera.current = true
-		camera.zoom = Vector2(0.75, 0.75)
+		camera.zoom = Vector2(0.5, 0.5)
 		add_child(camera)
 
 
