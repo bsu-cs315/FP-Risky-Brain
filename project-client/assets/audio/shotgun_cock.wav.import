@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/shotgun_cock.wav-2ce36438066b8a6b3de5a0ced04cf392.sample"
+
+[deps]
+
+source_file="res://assets/audio/shotgun_cock.wav"
+dest_files=[ "res://.import/shotgun_cock.wav-2ce36438066b8a6b3de5a0ced04cf392.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

@@ -35,6 +35,10 @@ _global_script_class_icons={
 config/name="FP-Risky-Brain-Client"
 run/main_scene="res://src/menus/Title.tscn"
 
+[audio]
+
+output_latency=0
+
 [autoload]
 
 Server="*res://src/Server.tscn"

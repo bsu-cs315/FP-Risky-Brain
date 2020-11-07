@@ -27,9 +27,8 @@ onready var bullet: Resource = load("res://src/weapons/Bullet.tscn")
 
 
 func _ready() -> void:
-	inventory.primary = load("res://src/weapons/Pistol.gd").new(self)
-	current_weapon = inventory.primary
-	change_weapon_sprite()
+	inventory.primary = load("res://src/weapons/AssaultRifle.gd").new(self)
+	change_current_weapon(inventory.primary)
 	if name == "SinglePlayer" || is_network_master():
 		camera.current = true
 		camera.zoom = Vector2(0.5, 0.5)
@@ -148,11 +147,17 @@ func get_rot(inputs: Dictionary, pos: Vector2) -> float:
 func change_current_weapon(weapon: Weapon) -> void:
 	current_weapon = weapon
 	change_weapon_sprite()
+	change_weapon_sound()
 
 
 func change_weapon_sprite() -> void:
 	$Body.animation = current_weapon.player_animation_name
+	$Body.stop()
 	$Body.frame = 0
+	
+	
+func change_weapon_sound() -> void:
+	$WeaponAudioPlayer.stream = current_weapon.audio_stream
 
 
 func add_currency(amount: int) -> void:

@@ -2,7 +2,7 @@ extends Weapon
 
 
 func _init(player: Node) -> void:
-	damage = 1
+	damage = 20
 	bullet = load("res://src/weapons/Bullet.tscn")
 	ammo_total_max = 48
 	ammo_total_current = ammo_total_max

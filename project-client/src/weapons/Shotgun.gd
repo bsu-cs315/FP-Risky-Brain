@@ -7,6 +7,7 @@ var pellet_count:= 10
 var pellet_inaccuracy:= deg2rad(20.0)
 var reloading:= false
 var reload_timer := Timer.new()
+var shotgun_cock_sound: AudioStream = load("res://assets/audio/shotgun_cock.wav")
 
 
 func _init(player: Node) -> void:
@@ -22,11 +23,13 @@ func _init(player: Node) -> void:
 	bullet_speed = 1000
 	shooter = player
 	max_lifetime = 1.0
+	reload_timer.one_shot = true
+	reload_timer.connect("timeout", self, "load_single_bullet")
 	shoot_point_node = player.get_node("Body/ShotgunShootPoint")
 	player_sprite = player.get_node("Body")
 	player_sprite.connect("animation_finished", self, "stop_animation")
 	audio_player = player.get_node("WeaponAudioPlayer")
-	audio_player.stream = load("res://assets/audio/shotgun_fire.wav")
+	audio_stream = load("res://assets/audio/shotgun_fire.wav")
 	shot_cooldown_timer.one_shot = true
 	shooter.call_deferred("add_child", shot_cooldown_timer)
 
@@ -41,21 +44,35 @@ func shoot() -> void:
 			proj.rotation = pellet_angle - (PI / 2)
 			shooter.get_node("/root/World").add_child(proj)
 		shot_cooldown_timer.start(shot_cooldown)
-		audio_player.play()
+		play_fire_sound()
 		player_sprite.frame = 1 # play shooting from the second frame
 		player_sprite.play() # animation set in player.gd change_weapon_sprite
 		decrement_ammo(1)
 
 
-func stop_animation() -> void:
-	player_sprite.stop()
+func play_fire_sound() -> void:
+	var new_audio_player = AudioStreamPlayer2D.new()
+	new_audio_player.volume_db = -10
+	shooter.add_child(new_audio_player)
+	new_audio_player.stream = audio_stream
+	new_audio_player.connect("finished", self, "play_cock_sound")
+	new_audio_player.play()
+	yield(new_audio_player, "finished")
+	
+	
+func play_cock_sound() -> void:
+	if shooter.current_weapon is get_script():
+		var new_audio_player = AudioStreamPlayer2D.new()
+		new_audio_player.volume_db = -10
+		shooter.add_child(new_audio_player)
+		new_audio_player.stream = shotgun_cock_sound
+		new_audio_player.play()
+		yield(new_audio_player, "finished")
 
 
 func reload() -> void:
-	if !reloading:
+	if !reloading and get_empty_mag_slots() != 0:
 		reloading = true
-		reload_timer.one_shot = true
-		reload_timer.connect("timeout", self, "load_single_bullet")
 		shooter.add_child(reload_timer)
 		# start timer so it can add a bullet when it expires
 		reload_timer.start(BULLET_RELOAD_TIME)
