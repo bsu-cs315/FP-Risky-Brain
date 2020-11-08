@@ -8,15 +8,16 @@ onready var spawn_points: Array = get_tree().get_nodes_in_group("EnemySpawnPoint
 onready var zombie: Resource = load("res://src/enemies/Zombie.tscn")
 
 
-func _ready():
-	rng.randomize()
-	add_child(spawn_timer)
-	var _err_func_timer_timeout = spawn_timer.connect("timeout", self, "spawn_enemy")
-	spawn_timer.one_shot = true
-	spawn_timer.start(1)
+func _ready() -> void:
+	if not Server.is_multiplayer || get_tree().is_network_server():
+		rng.randomize()
+		add_child(spawn_timer)
+		var _err_func_timer_timeout = spawn_timer.connect("timeout", self, "spawn_enemy")
+		spawn_timer.one_shot = true
+		spawn_timer.start(1)
 
 
-func spawn_enemy():
+func spawn_enemy() -> void:
 	var random_spawn_point_index: int = rng.randi_range(0, spawn_points.size() - 1)
 	var random_spawn_point: Node2D = spawn_points[random_spawn_point_index]
 	var random_spawn_timer_cooldown: float = rng.randf_range(0.5, 3)

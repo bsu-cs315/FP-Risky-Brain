@@ -24,10 +24,10 @@ func _init(player: Node) -> void:
 	shooter = player
 	max_lifetime = 1.0
 	reload_timer.one_shot = true
-	reload_timer.connect("timeout", self, "load_single_bullet")
+	var _err_timer = reload_timer.connect("timeout", self, "load_single_bullet")
 	shoot_point_node = player.get_node("Body/ShotgunShootPoint")
 	player_sprite = player.get_node("Body")
-	player_sprite.connect("animation_finished", self, "stop_animation")
+	var _err_sprite = player_sprite.connect("animation_finished", self, "stop_animation")
 	audio_player = player.get_node("WeaponAudioPlayer")
 	audio_stream = load("res://assets/audio/shotgun_fire.wav")
 	shot_cooldown_timer.one_shot = true

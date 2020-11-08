@@ -19,8 +19,8 @@ func _physics_process(_delta: float) -> void:
 	move_toward_player()
 	if health <= 0:
 		die()
-		
-		
+
+
 func find_player() -> void:
 	if PlayerInfo.player_nodes[0] != null:
 		target = PlayerInfo.player_nodes[0]
@@ -30,7 +30,7 @@ func move_toward_player() -> void:
 	movement_dir = position.direction_to(target.position)
 	var _linear_velocity = move_and_slide(movement_dir * movement_speed)
 	rotation = movement_dir.angle() - (PI / 2)
-	
+
 
 func take_damage(damage_incoming: int, area: Area2D, attacker: Node) -> void:
 	if !alive:
@@ -50,8 +50,8 @@ func take_damage(damage_incoming: int, area: Area2D, attacker: Node) -> void:
 			reward += bounty
 		die()
 	attacker.add_currency(reward)
-	
-	
+
+
 func die() -> void:
 	alive = false
 	queue_free()

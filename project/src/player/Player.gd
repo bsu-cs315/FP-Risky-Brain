@@ -4,7 +4,10 @@ signal died
 
 export var movement_speed: float = 250.0
 export var health: int = 100
-export var player_id:= 1
+
+# server input processing
+var inputs_to_be_processed : Array
+var last_processed_input_id := 0
 
 var owner_inputs : Dictionary
 var past_player_inputs:= {}
@@ -19,12 +22,10 @@ var movement_dir: Vector2 = Vector2(0.0, 0.0)
 var velocity : Vector2
 var mouse_pos: Vector2
 var shoot_dir: Vector2
+var camera:= Camera2D.new()
+var current_weapon: Weapon
 
-
-onready var camera:= Camera2D.new()
-onready var current_weapon: Weapon
 onready var bullet: Resource = load("res://src/weapons/Bullet.tscn")
-
 
 func _ready() -> void:
 	inventory.primary = load("res://src/weapons/AssaultRifle.gd").new(self)
@@ -36,10 +37,29 @@ func _ready() -> void:
 
 
 func _physics_process(_delta: float) -> void:
+	if Server.server != null:
+		_server_tick()
+	else:
+		_client_tick()
+
+
+func _server_tick() -> void:
+	# I am a server
+	if not inputs_to_be_processed.empty():
+		move(inputs_to_be_processed[0])
+		# move this player on all non-owner clients
+		rpc("send_puppet_data", inputs_to_be_processed[0], position, rotation)
+		# validate player's movement with owner
+		rpc("validate_movements", position, inputs_to_be_processed[0].id)
+		# remove what we just used
+		inputs_to_be_processed.pop_front()
+
+
+func _client_tick() -> void:
 	if name == "SinglePlayer":
-		owner_inputs = get_inputs(0)
-		move(owner_inputs)
-		return
+			owner_inputs = get_inputs(0)
+			move(owner_inputs)
+			return
 	if str(get_tree().get_network_unique_id()) == name:
 		#I am controlling this player, move based on my inputs
 		var timestamp = OS.get_ticks_msec()
@@ -52,6 +72,11 @@ func _physics_process(_delta: float) -> void:
 		#I'm not controlling player, move based on server pos, rot
 		position = puppet_position
 		rotation = puppet_rotation
+
+
+remote func send_player_inputs(data: Dictionary):
+	inputs_to_be_processed.append(data)
+
 
 # in this case, the puppets are team members of the actively-controlled player
 remote func send_puppet_data(inputs: Dictionary, pos: Vector2, rot: float) -> void:

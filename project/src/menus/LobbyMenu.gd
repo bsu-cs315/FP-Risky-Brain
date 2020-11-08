@@ -2,6 +2,7 @@ extends Node
 
 
 func _on_StartButton_pressed() -> void:
+	Server.is_multiplayer = true
 	if Server.is_network_connected:
 		Server.rpc_id(1, "start_game")
 

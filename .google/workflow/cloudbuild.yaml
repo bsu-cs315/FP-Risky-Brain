@@ -1,21 +1,21 @@
 steps:
 - name: "barichello/godot-ci:3.2.2"
   args: ["mkdir", "-v", "-p", "build/linux"]
-  dir: "project-server"
+  dir: "project"
   timeout: 30s
 - name: "barichello/godot-ci:3.2.2"
   args: ["mkdir", "-v", "-p", "/builder/home/.local/share/godot/templates"]
-  dir: "project-server"
+  dir: "project"
   timeout: 30s
 - name: "barichello/godot-ci:3.2.2"
   args: ["mv", "/root/.local/share/godot/templates/3.2.2.stable", "/builder/home/.local/share/godot/templates/3.2.2.stable"]
   timeout: 30s        
 - name: "barichello/godot-ci:3.2.2"
   args: ["godot", "-v", "--export-debug", "Linux/X11", "build/linux/server.x86_64"]
-  dir: "project-server"
+  dir: "project"
   timeout: 120s
 - name: 'gcr.io/cloud-builders/gcloud' 
-  args: ['compute', 'scp', '--zone=us-central1-a', '/workspace/project-server/build/linux/server.pck', 'root@risky-brain-server:/home/kadedentel']
+  args: ['compute', 'scp', '--zone=us-central1-a', '/workspace/project/build/linux/server.pck', 'root@risky-brain-server:/home/kadedentel']
 - name: 'gcr.io/cloud-builders/gcloud' 
   args: ['compute', 'instances', 'stop', '--zone=us-central1-a', 'risky-brain-server']
 - name: 'gcr.io/cloud-builders/gcloud'
