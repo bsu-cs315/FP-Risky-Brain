@@ -37,7 +37,7 @@ func configure_server() -> void:
 
 func enable_ssl() -> void:
 	var cert : X509Certificate = X509Certificate.new()
-	var load_cert_err = cert.load("res://assets/certs/fullchain.pem")
+	var load_cert_err = cert.load("/home/kadedentel/fullchain.pem")
 	if load_cert_err != OK:
 		print("Loading cert error: " + str(load_cert_err))
 	else:
