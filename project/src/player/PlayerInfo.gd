@@ -2,10 +2,12 @@ extends Node
 
 
 var player_nodes: Array
+var hud: Node
 
 
 func init_player_nodes() -> void:
 	player_nodes = get_node("/root/World/Players").get_children()
+	hud = get_node("/root/World/HUD")
 
 
 func get_owned_player() -> KinematicBody2D:

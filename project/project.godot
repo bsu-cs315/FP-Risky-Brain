@@ -33,7 +33,7 @@ _global_script_class_icons={
 [application]
 
 config/name="FP-Risky-Brain-Client"
-run/main_scene="res://src/Server.tscn"
+run/main_scene="res://src/menus/Title.tscn"
 
 [audio]
 

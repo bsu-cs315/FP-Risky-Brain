@@ -18,9 +18,20 @@ func interact(interactor: Node2D):
 		interactor.currency -= cost
 		$KinematicBody2D/PhysicsCollider.disabled = true
 		interacted = true
+		force_hide_information()
 
 
 func unlock(delta: float) -> void:
 	rotation_degrees = lerp(rotation_degrees, open_rot, delta)
 	if open_rot == rotation_degrees:
 		opened = true
+		
+		
+func show_information(area: Area2D) -> void:
+	if area.name == "PlayerInteractArea" and !interacted:
+		PlayerInfo.hud.set_interactable_label_text(interactable_name + ": $" + str(cost))
+	
+		
+		
+func force_hide_information() -> void:
+	PlayerInfo.hud.set_interactable_label_text("")

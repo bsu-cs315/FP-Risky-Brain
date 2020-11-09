@@ -4,7 +4,7 @@ extends KinematicBody2D
 export var movement_speed:= 100.0
 export var health:= 100
 export var damage:= 35
-export var attack_time:= 0.75
+export var attack_time:= 0.5
 export var bounty:= 50
 
 var alive:= true

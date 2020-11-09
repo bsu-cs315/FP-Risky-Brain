@@ -10,6 +10,7 @@ extents = Vector2( 32, 4 )
 collision_layer = 68
 collision_mask = 19
 script = ExtResource( 1 )
+interactable_name = "Door"
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 32, 0 )

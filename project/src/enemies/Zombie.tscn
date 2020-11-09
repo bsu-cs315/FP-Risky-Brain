@@ -18,10 +18,13 @@ animations = [ {
 "speed": 5.0
 } ]
 
-[node name="Zombie" type="KinematicBody2D"]
+[node name="Zombie" type="KinematicBody2D" groups=[
+"Enemies",
+]]
 collision_layer = 2
 collision_mask = 3
 script = ExtResource( 1 )
+movement_speed = 150.0
 
 [node name="BaseCollider" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )

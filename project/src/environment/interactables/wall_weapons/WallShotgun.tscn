@@ -26,6 +26,7 @@ extents = Vector2( 3.5, 15.5 )
 [node name="WallShotgun" type="Area2D"]
 collision_layer = 64
 script = ExtResource( 1 )
+interactable_name = "Shotgun"
 weapon = ExtResource( 3 )
 cost = 500
 refill_cost = 250

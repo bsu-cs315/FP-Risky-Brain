@@ -1,82 +1,86 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=21 format=2]
 
-[ext_resource path="res://assets/visual/player/player_shotgun.png" type="Texture" id=1]
-[ext_resource path="res://assets/visual/player/player_unarmed.png" type="Texture" id=2]
+[ext_resource path="res://assets/visual/player/player_assault_rifle.png" type="Texture" id=1]
+[ext_resource path="res://assets/visual/player/player_shotgun.png" type="Texture" id=2]
 [ext_resource path="res://src/player/Player.gd" type="Script" id=3]
 [ext_resource path="res://assets/visual/player/player_pistol.png" type="Texture" id=4]
-[ext_resource path="res://assets/visual/player/player_assault_rifle.png" type="Texture" id=5]
+[ext_resource path="res://assets/visual/player/player_unarmed.png" type="Texture" id=5]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 17.0
 
 [sub_resource type="AtlasTexture" id=2]
-atlas = ExtResource( 1 )
-region = Rect2( 0, 0, 128, 128 )
+atlas = ExtResource( 5 )
+region = Rect2( 0, 0, 64, 64 )
 
 [sub_resource type="AtlasTexture" id=3]
-atlas = ExtResource( 1 )
-region = Rect2( 128, 0, 128, 128 )
-
-[sub_resource type="AtlasTexture" id=4]
-atlas = ExtResource( 1 )
-region = Rect2( 256, 0, 128, 128 )
-
-[sub_resource type="AtlasTexture" id=5]
-atlas = ExtResource( 1 )
-region = Rect2( 384, 0, 128, 128 )
-
-[sub_resource type="AtlasTexture" id=6]
-atlas = ExtResource( 1 )
-region = Rect2( 512, 0, 128, 128 )
-
-[sub_resource type="AtlasTexture" id=7]
-atlas = ExtResource( 1 )
-region = Rect2( 640, 0, 128, 128 )
-
-[sub_resource type="AtlasTexture" id=8]
-atlas = ExtResource( 1 )
-region = Rect2( 768, 0, 128, 128 )
-
-[sub_resource type="AtlasTexture" id=9]
-atlas = ExtResource( 1 )
-region = Rect2( 896, 0, 128, 128 )
-
-[sub_resource type="AtlasTexture" id=10]
-atlas = ExtResource( 5 )
+atlas = ExtResource( 2 )
 region = Rect2( 0, 0, 128, 128 )
 
-[sub_resource type="AtlasTexture" id=11]
-atlas = ExtResource( 5 )
+[sub_resource type="AtlasTexture" id=4]
+atlas = ExtResource( 2 )
 region = Rect2( 128, 0, 128, 128 )
 
-[sub_resource type="AtlasTexture" id=12]
-atlas = ExtResource( 5 )
+[sub_resource type="AtlasTexture" id=5]
+atlas = ExtResource( 2 )
 region = Rect2( 256, 0, 128, 128 )
 
-[sub_resource type="SpriteFrames" id=13]
+[sub_resource type="AtlasTexture" id=6]
+atlas = ExtResource( 2 )
+region = Rect2( 384, 0, 128, 128 )
+
+[sub_resource type="AtlasTexture" id=7]
+atlas = ExtResource( 2 )
+region = Rect2( 512, 0, 128, 128 )
+
+[sub_resource type="AtlasTexture" id=8]
+atlas = ExtResource( 2 )
+region = Rect2( 640, 0, 128, 128 )
+
+[sub_resource type="AtlasTexture" id=9]
+atlas = ExtResource( 2 )
+region = Rect2( 768, 0, 128, 128 )
+
+[sub_resource type="AtlasTexture" id=10]
+atlas = ExtResource( 2 )
+region = Rect2( 896, 0, 128, 128 )
+
+[sub_resource type="AtlasTexture" id=11]
+atlas = ExtResource( 1 )
+region = Rect2( 0, 0, 128, 128 )
+
+[sub_resource type="AtlasTexture" id=12]
+atlas = ExtResource( 1 )
+region = Rect2( 128, 0, 128, 128 )
+
+[sub_resource type="AtlasTexture" id=13]
+atlas = ExtResource( 1 )
+region = Rect2( 256, 0, 128, 128 )
+
+[sub_resource type="SpriteFrames" id=14]
 animations = [ {
-"frames": [ ExtResource( 2 ) ],
+"frames": [ SubResource( 2 ) ],
 "loop": true,
 "name": "default",
-"speed": 10.0
-}, {
-"frames": [ SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ), SubResource( 7 ), SubResource( 8 ), SubResource( 9 ) ],
-"loop": true,
-"name": "shotgun",
-"speed": 10.0
-}, {
-"frames": [ SubResource( 10 ), SubResource( 11 ), SubResource( 12 ) ],
-"loop": true,
-"name": "assault_rifle",
 "speed": 10.0
 }, {
 "frames": [ ExtResource( 4 ) ],
 "loop": true,
 "name": "pistol",
 "speed": 10.0
+}, {
+"frames": [ SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ), SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), SubResource( 10 ) ],
+"loop": true,
+"name": "shotgun",
+"speed": 10.0
+}, {
+"frames": [ SubResource( 11 ), SubResource( 12 ), SubResource( 13 ) ],
+"loop": true,
+"name": "assault_rifle",
+"speed": 10.0
 } ]
 
-[sub_resource type="RectangleShape2D" id=14]
+[sub_resource type="RectangleShape2D" id=15]
 extents = Vector2( 22, 25 )
 
 [node name="Player" type="KinematicBody2D"]
@@ -108,8 +112,7 @@ __meta__ = {
 }
 
 [node name="Body" type="AnimatedSprite" parent="."]
-frames = SubResource( 13 )
-animation = "assault_rifle"
+frames = SubResource( 14 )
 __meta__ = {
 "_edit_lock_": true
 }
@@ -123,15 +126,15 @@ position = Vector2( -8.5, 31 )
 [node name="ShotgunShootPoint" type="Node2D" parent="Body"]
 position = Vector2( -9.5, 35.5 )
 
-[node name="InteractArea" type="Area2D" parent="Body"]
+[node name="PlayerInteractArea" type="Area2D" parent="Body"]
 collision_mask = 64
 __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/InteractArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/PlayerInteractArea"]
 position = Vector2( 0, 23.325 )
-shape = SubResource( 14 )
+shape = SubResource( 15 )
 __meta__ = {
 "_edit_lock_": true
 }
