@@ -8,6 +8,10 @@ A 2D game made in Godot by kade-d and adamgack.
 
 Use `W` `A` `S` `D` to move your player. Use `left-click` to shoot. Use `R` to reload. Use `E` to interact with objects. Use `1` to change to primary weapon. Use `2` to change to secondary weapon.
 
+## Game Overview
+
+The only goal is to survive as long as possible during a zombie invasion. You earn money by killing zombies invading the house. You can unlock doors using money to access new areas. There are 2 weapons scattered on the walls across the house. Good luck and stay out of arm's reach!
+
 ## Project Report
 
 ### Reflection
