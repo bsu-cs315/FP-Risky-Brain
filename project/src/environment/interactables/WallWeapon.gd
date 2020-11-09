@@ -7,7 +7,7 @@ export var refill_cost := 0
 var purchased := false
 
 
-func interact(interactor: Node2D):
+func interact(interactor: Node2D) -> void:
 	if interactor.currency >= cost and !(interactor.current_weapon is weapon):
 		interactor.currency -= cost
 		if interactor.inventory.secondary == null:
@@ -22,22 +22,22 @@ func interact(interactor: Node2D):
 				interactor.change_current_weapon(interactor.inventory.secondary)
 		purchased = true
 		$AnimatedSprite.frame = 1
-		force_show_information()
 	elif interactor.currency >= refill_cost and purchased and interactor.current_weapon is weapon:
 		interactor.currency -= refill_cost
 		interactor.current_weapon.refill_ammo()
+	force_show_information(interactor)
 
 
 func show_information(area: Area2D) -> void:
 	if area.name == "PlayerInteractArea":
-		if area.owner.current_weapon != weapon:
+		if !(area.owner.current_weapon is weapon):
 			PlayerInfo.hud.set_interactable_label_text(interactable_name + ": $" + str(cost))
 		else:
 			PlayerInfo.hud.set_interactable_label_text(interactable_name + " ammo: $" + str(refill_cost))
 			
 
-func force_show_information() -> void:
-	if !purchased:
-			PlayerInfo.hud.set_interactable_label_text(interactable_name + ": $" + str(cost))
+func force_show_information(interactor: Node2D) -> void:
+	if !(interactor.current_weapon is weapon):
+		PlayerInfo.hud.set_interactable_label_text(interactable_name + ": $" + str(cost))
 	else:
 		PlayerInfo.hud.set_interactable_label_text(interactable_name + " ammo: $" + str(refill_cost))

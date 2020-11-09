@@ -13,7 +13,7 @@ func _physics_process(delta) -> void:
 		unlock(delta)
 		
 		
-func interact(interactor: Node2D):
+func interact(interactor: Node2D) -> void:
 	if interactor.currency >= cost and !interacted:
 		interactor.currency -= cost
 		$KinematicBody2D/PhysicsCollider.disabled = true
@@ -30,8 +30,7 @@ func unlock(delta: float) -> void:
 func show_information(area: Area2D) -> void:
 	if area.name == "PlayerInteractArea" and !interacted:
 		PlayerInfo.hud.set_interactable_label_text(interactable_name + ": $" + str(cost))
-	
-		
-		
+
+
 func force_hide_information() -> void:
 	PlayerInfo.hud.set_interactable_label_text("")

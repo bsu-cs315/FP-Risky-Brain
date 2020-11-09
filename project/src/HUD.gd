@@ -23,7 +23,7 @@ func show_reset_button() -> void:
 	$Control/ResetButton.show()
 	
 
-func _on_ResetButton_pressed():
+func _on_ResetButton_pressed() -> void:
 	get_tree().call_group("Enemies", "queue_free")
 	get_node("/root/World").queue_free()
-	get_tree().change_scene("res://src/menus/Title.tscn")
+	var _err_change_scene = get_tree().change_scene("res://src/menus/Title.tscn")

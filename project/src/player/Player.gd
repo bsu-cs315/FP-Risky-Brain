@@ -1,6 +1,5 @@
 extends KinematicBody2D
 
-signal died
 
 export var max_movement_speed: float = 250.0
 export var health: int = 100
@@ -17,7 +16,7 @@ var puppet_position:= Vector2.ZERO
 var puppet_rotation:= 0.0
 var inventory:= Inventory.new()
 var currency:= 1000
-var alive:= true
+var is_alive:= true
 var current_movement_speed: float = 250.0
 var movement_dir: Vector2 = Vector2(0.0, 0.0)
 var velocity : Vector2
@@ -32,25 +31,26 @@ var current_weapon: Weapon
 
 onready var bullet: Resource = load("res://src/weapons/Bullet.tscn")
 
+
 func _ready() -> void:
 	inventory.primary = load("res://src/weapons/Pistol.gd").new(self)
 	add_child(regen_timer)
 	regen_timer.one_shot = true
-	regen_timer.connect("timeout", self, "on_regen_timer_timeout")
+	var _err_regen_timeout = regen_timer.connect("timeout", self, "on_regen_timer_timeout")
 	add_child(slowdown_timer)
 	slowdown_timer.one_shot = true
-	slowdown_timer.connect("timeout", self, "on_slowdown_timer_timeout")
+	var _err_slowdown_timeout = slowdown_timer.connect("timeout", self, "on_slowdown_timer_timeout")
 	change_current_weapon(inventory.primary)
 	if name == "SinglePlayer" || is_network_master():
 		camera.current = true
-		camera.zoom = Vector2(0.5, 0.5)
+		camera.zoom = Vector2(0.75, 0.75)
 		add_child(camera)
 
 
 func _physics_process(_delta: float) -> void:
 	if Server.server != null:
 		_server_tick()
-	elif alive:
+	elif is_alive:
 		_client_tick()
 
 
@@ -85,7 +85,7 @@ func _client_tick() -> void:
 		rotation = puppet_rotation
 
 
-remote func send_player_inputs(data: Dictionary):
+remote func send_player_inputs(data: Dictionary) -> void:
 	inputs_to_be_processed.append(data)
 
 
@@ -94,6 +94,7 @@ remote func send_puppet_data(inputs: Dictionary, pos: Vector2, rot: float) -> vo
 	puppet_inputs = inputs
 	puppet_position = pos
 	puppet_rotation = rot
+
 
 # server validates client position
 remote func validate_movements(server_pos: Vector2, last_accepted_input_id: int) -> void:
@@ -221,17 +222,17 @@ func take_damage(damage: int, area: Area2D, _attacker: Node) -> bool:
 	
 	
 func on_regen_timer_timeout() -> void:
-	if alive:
+	if is_alive:
 		health = 100
 		
 
 func on_slowdown_timer_timeout() -> void:
-	if alive:
+	if is_alive:
 		current_movement_speed = max_movement_speed
 
 
 func die() -> void:
-	alive = false
+	is_alive = false
 	PlayerInfo.hud.show_reset_button()
 	
 

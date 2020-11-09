@@ -27,11 +27,11 @@ func _ready() -> void:
 
 
 func configure_server() -> void:
-	get_tree().connect("network_peer_connected", self, "client_connected_to_server")
-	get_tree().connect("network_peer_disconnected", self, "client_disconnected_from_server")
+	var _err_network_peer_connected = get_tree().connect("network_peer_connected", self, "client_connected_to_server")
+	var _err_network_peer_disconnected = get_tree().connect("network_peer_disconnected", self, "client_disconnected_from_server")
 	server = WebSocketServer.new()
 	enable_ssl()
-	server.listen(SERVER_PORT, PoolStringArray(), true)
+	var _err_server_listen = server.listen(SERVER_PORT, PoolStringArray(), true)
 	get_tree().set_network_peer(server)
 
 
@@ -53,7 +53,7 @@ func enable_ssl() -> void:
 
 
 func client_connected_to_server(id) -> void:
-	print("Player connected")
+	print("Player %d connected" % id)
 
 
 func client_disconnected_from_server(id) -> void:

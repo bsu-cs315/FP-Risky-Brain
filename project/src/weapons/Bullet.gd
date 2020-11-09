@@ -10,7 +10,7 @@ var max_lifetime: float
 var lifetime: float = 0.0
 
 
-func initialize(weapon: Weapon):
+func initialize(weapon: Weapon) -> void:
 	shooter = weapon.shooter
 	speed = weapon.bullet_speed
 	direction = shooter.shoot_dir
@@ -20,7 +20,7 @@ func initialize(weapon: Weapon):
 	position = weapon.shoot_point_node.global_position
 	
 
-func _ready():
+func _ready() -> void:
 	assert(max_lifetime, "Max lifetime must be initialized!")
 	assert(speed, "Max lifetime must be initialized!")
 	assert(damage, "Max lifetime must be initialized!")
@@ -41,7 +41,7 @@ func _physics_process(delta: float) -> void:
 		queue_free()
 
 
-func handle_collision(collision: Object):
+func handle_collision(collision: Object) -> void:
 	var owner: Node = collision.owner
 	if collision is Area2D and owner.has_method("take_damage"):
 		if owner.has_method("take_damage"):

@@ -1,7 +1,7 @@
 extends Weapon
 
 
-const BULLET_RELOAD_TIME = .4
+const BULLET_RELOAD_TIME := 0.4
 
 var pellet_count:= 10
 var pellet_inaccuracy:= deg2rad(20.0)
