@@ -88,6 +88,9 @@ position = Vector2( 0.420921, 1.68369 )
 collision_mask = 15
 script = ExtResource( 3 )
 
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2( 0.75, 0.75 )
+
 [node name="RayCast2D" type="RayCast2D" parent="."]
 enabled = true
 cast_to = Vector2( 0, 0 )
@@ -145,3 +148,9 @@ bus = "WeaponFire"
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="RegenTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="SlowdownTimer" type="Timer" parent="."]
+one_shot = true
