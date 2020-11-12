@@ -17,6 +17,8 @@ var current_weapon: Weapon
 var currency:= 1000
 var health: int = 100
 var inventory:= Inventory.new()
+var interactable_areas: Array
+var targeted_interactable: Interactable
 
 # player inputs / pos
 var owner_inputs : Dictionary
@@ -27,22 +29,9 @@ var past_player_positions := {}
 var puppet_inputs : Dictionary
 var puppet_position:= Vector2.ZERO
 var puppet_rotation:= 0.0
-var inventory:= Inventory.new()
-var currency:= 1000
 var is_alive:= true
-var current_movement_speed: float = 250.0
 var movement_dir: Vector2 = Vector2(0.0, 0.0)
-var velocity : Vector2
 var mouse_pos: Vector2
-var shoot_dir: Vector2
-var regen_timer:= Timer.new()
-var regen_cooldown:= 3.0
-var slowdown_timer:= Timer.new()
-var slowdown_duration:= 0.5
-var camera:= Camera2D.new()
-var current_weapon: Weapon
-var interactable_areas: Array
-var targeted_interactable: Interactable
 
 # server input processing
 var inputs_to_be_processed : Array
@@ -170,7 +159,7 @@ func interact() -> void:
 
 
 func get_movement_dir(inputs: Dictionary) -> Vector2:
-	var movement_dir = Vector2.ZERO
+	movement_dir = Vector2.ZERO
 	if inputs.left:
 		movement_dir.x -= 1.0
 	if inputs.right:
@@ -270,16 +259,6 @@ func take_damage(damage: int, area: Area2D, _attacker: Node) -> bool:
 	return took_damage
 
 
-func on_RegenTimer_timeout() -> void:
-	if health > 0:
-		health = 100
-
-
-func on_SlowdownTimer_timeout() -> void:
-	if health > 0:
-		current_movement_speed = max_movement_speed
-
-
 func die() -> void:
 	PlayerInfo.hud.show_reset_button()
 
@@ -292,3 +271,13 @@ func _on_PlayerInteractArea_area_entered(area: Area2D):
 func _on_PlayerInteractArea_area_exited(area):
 	if area is Interactable:
 		interactable_areas.erase(area)
+
+
+func _on_RegenTimer_timeout():
+	if health > 0:
+		health = 100
+
+
+func _on_SlowdownTimer_timeout():
+	if health > 0:
+		current_movement_speed = max_movement_speed
