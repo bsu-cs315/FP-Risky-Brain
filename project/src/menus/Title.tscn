@@ -50,7 +50,6 @@ __meta__ = {
 }
 
 [node name="MultiplayerButton" type="Button" parent="."]
-visible = false
 margin_left = 487.802
 margin_top = 492.185
 margin_right = 751.802
@@ -61,5 +60,18 @@ text = "Multiplayer"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="CreditsButton" type="Button" parent="."]
+margin_left = 1100.32
+margin_top = 639.271
+margin_right = 1238.32
+margin_bottom = 688.271
+rect_pivot_offset = Vector2( -63.654, 52 )
+custom_fonts/font = SubResource( 2 )
+text = "Credits"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="pressed" from="PlayButton" to="." method="_on_PlayButton_pressed"]
 [connection signal="pressed" from="MultiplayerButton" to="." method="_on_MultiplayerButton_pressed"]
+[connection signal="pressed" from="CreditsButton" to="." method="_on_CreditsButton_pressed"]

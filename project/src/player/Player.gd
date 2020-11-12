@@ -2,15 +2,28 @@ extends KinematicBody2D
 
 
 export var max_movement_speed: float = 250.0
-export var health: int = 100
 
-# server input processing
-var inputs_to_be_processed : Array
-var last_processed_input_id := 0
+# misc.
+var regen_cooldown:= 3.0
+var slowdown_duration:= 0.5
 
+# movement
+var current_movement_speed: float = 250.0
+var velocity : Vector2
+var shoot_dir: Vector2
+
+# player info
+var current_weapon: Weapon
+var currency:= 1000
+var health: int = 100
+var inventory:= Inventory.new()
+
+# player inputs / pos
 var owner_inputs : Dictionary
 var past_player_inputs:= {}
 var past_player_positions := {}
+
+# puppet info
 var puppet_inputs : Dictionary
 var puppet_position:= Vector2.ZERO
 var puppet_rotation:= 0.0
@@ -31,41 +44,40 @@ var current_weapon: Weapon
 var interactable_areas: Array
 var targeted_interactable: Interactable
 
+# server input processing
+var inputs_to_be_processed : Array
+var last_processed_input_id := 0
+
 onready var bullet: Resource = load("res://src/weapons/Bullet.tscn")
 
 
 func _ready() -> void:
 	inventory.primary = load("res://src/weapons/Pistol.gd").new(self)
-	add_child(regen_timer)
-	regen_timer.one_shot = true
-	var _err_regen_timeout = regen_timer.connect("timeout", self, "on_regen_timer_timeout")
-	add_child(slowdown_timer)
-	slowdown_timer.one_shot = true
-	var _err_slowdown_timeout = slowdown_timer.connect("timeout", self, "on_slowdown_timer_timeout")
 	change_current_weapon(inventory.primary)
 	if name == "SinglePlayer" || is_network_master():
-		camera.current = true
-		camera.zoom = Vector2(0.75, 0.75)
-		add_child(camera)
+		$Camera2D.current = true
 
 
 func _physics_process(_delta: float) -> void:
 	if Server.server != null:
 		_server_tick()
-	elif is_alive:
+	elif health > 0:
 		_client_tick()
 
+# <---Server-Exclusive Functions--->
 
 func _server_tick() -> void:
-	# I am a server
 	if not inputs_to_be_processed.empty():
 		move(inputs_to_be_processed[0])
-		# move this player on all non-owner clients
 		rpc("send_puppet_data", inputs_to_be_processed[0], position, rotation)
-		# validate player's movement with owner
 		rpc("validate_movements", position, inputs_to_be_processed[0].id)
-		# remove what we just used
 		inputs_to_be_processed.pop_front()
+
+
+remote func send_player_inputs(data: Dictionary) -> void:
+	inputs_to_be_processed.append(data)
+
+# END <---Server-Exclusive Functions--->
 
 
 func _client_tick() -> void:
@@ -74,48 +86,15 @@ func _client_tick() -> void:
 			get_targeted_interactable()
 			show_interactable_information()
 			move(owner_inputs)
-			return
-	if str(get_tree().get_network_unique_id()) == name:
-		#I am controlling this player, move based on my inputs
-		var timestamp = OS.get_ticks_msec()
-		owner_inputs = get_inputs(timestamp)
-		past_player_inputs[timestamp] = owner_inputs
-		move(owner_inputs)
-		past_player_positions[timestamp] = position
-		rpc_id(1, "send_player_inputs", owner_inputs)
+	elif is_network_master():
+		move_owned_network_player()
 	else:
 		#I'm not controlling player, move based on server pos, rot
 		position = puppet_position
 		rotation = puppet_rotation
 
 
-remote func send_player_inputs(data: Dictionary) -> void:
-	inputs_to_be_processed.append(data)
-
-
-# in this case, the puppets are team members of the actively-controlled player
-remote func send_puppet_data(inputs: Dictionary, pos: Vector2, rot: float) -> void:
-	puppet_inputs = inputs
-	puppet_position = pos
-	puppet_rotation = rot
-
-
-# server validates client position
-remote func validate_movements(server_pos: Vector2, last_accepted_input_id: int) -> void:
-	if past_player_inputs.size() != 0:
-		var player_pos_for_id : Vector2 = past_player_positions[last_accepted_input_id]
-		if abs(server_pos.x - player_pos_for_id.x) > 1 || abs(server_pos.y - player_pos_for_id.y) > 1:
-			reconciliate(server_pos, last_accepted_input_id)
-		# clear player inputs and positions older than last accepted
-		for id in past_player_inputs.keys():
-			if id < last_accepted_input_id:
-				var _erased_input = past_player_inputs.erase(id)
-				var _erased_pos = past_player_positions.erase(id)
-
-
-func reconciliate(server_pos: Vector2, _last_accepted_input_id: int) -> void:
-		position = server_pos
-
+# <---Player Controls--->
 
 func get_inputs(timestamp: int) -> Dictionary:
 	var inputs : Dictionary = {
@@ -134,26 +113,32 @@ func get_inputs(timestamp: int) -> Dictionary:
 	return inputs
 
 
-# actually moves player
+func move_owned_network_player() -> void:
+	#I am controlling this player, move based on my inputs
+	var timestamp = OS.get_ticks_msec()
+	owner_inputs = get_inputs(timestamp)
+	past_player_inputs[timestamp] = owner_inputs
+	move(owner_inputs)
+	past_player_positions[timestamp] = position
+	rpc_id(1, "send_player_inputs", owner_inputs)
+
+
 func move(inputs: Dictionary) -> void:
 	if inputs.empty():
 		return
-	movement_dir = get_movement_dir(inputs)
-	shoot_dir = get_shoot_dir(inputs, position)
-	if inputs.primary:
+	if inputs.primary: # player always has a primary
 		change_current_weapon(inventory.primary)
-	if inputs.secondary:
-		if inventory.secondary != null:
-			change_current_weapon(inventory.secondary)
-	if inputs.fire:
-		if weapon_can_fire():
-			current_weapon.shoot()
+	if inputs.secondary && inventory.secondary != null:
+		change_current_weapon(inventory.secondary)
+	if inputs.fire && weapon_can_fire():
+		current_weapon.shoot()
 	if inputs.reload:
 		current_weapon.reload()
 	if inputs.interact:
 		interact()
 	rotation = get_rot(inputs, position)
-	velocity = movement_dir * current_movement_speed #need velocity of player
+	shoot_dir = get_shoot_dir(inputs, position) # need shoot dir for weapon
+	velocity = get_movement_dir(inputs) * current_movement_speed # need velocity of player for walking particles
 	var _linear_velocity = move_and_slide(velocity)
 
 
@@ -185,7 +170,7 @@ func interact() -> void:
 
 
 func get_movement_dir(inputs: Dictionary) -> Vector2:
-	movement_dir = Vector2.ZERO
+	var movement_dir = Vector2.ZERO
 	if inputs.left:
 		movement_dir.x -= 1.0
 	if inputs.right:
@@ -221,11 +206,6 @@ func change_weapon_sound() -> void:
 	$WeaponAudioPlayer.stream = current_weapon.audio_stream
 
 
-func add_currency(amount: int) -> void:
-	assert(amount >= 0)
-	currency += amount
-
-
 func weapon_can_fire() -> bool:
 	$WeaponShootPointRayCast.cast_to = Vector2(current_weapon.shoot_point_node.position.x, current_weapon.shoot_point_node.position.y)
 	return not $WeaponShootPointRayCast.is_colliding()
@@ -241,6 +221,40 @@ func player_can_interact(interactable_pos: Vector2) -> bool:
 			return false
 	return true
 
+# END <---Player Controls--->
+
+
+# <---Client Netcode--->
+
+remote func send_puppet_data(inputs: Dictionary, pos: Vector2, rot: float) -> void:
+	puppet_inputs = inputs
+	puppet_position = pos
+	puppet_rotation = rot
+
+
+# client validates client position based on server
+remote func validate_movements(server_pos: Vector2, last_accepted_input_id: int) -> void:
+	if past_player_inputs.size() != 0:
+		var player_pos_for_id : Vector2 = past_player_positions[last_accepted_input_id]
+		if abs(server_pos.x - player_pos_for_id.x) > 1 || abs(server_pos.y - player_pos_for_id.y) > 1:
+			reconciliate(server_pos, last_accepted_input_id)
+		# clear player inputs and positions older than last accepted
+		for id in past_player_inputs.keys():
+			if id < last_accepted_input_id:
+				var _erased_input = past_player_inputs.erase(id)
+				var _erased_pos = past_player_positions.erase(id)
+
+
+func reconciliate(server_pos: Vector2, _last_accepted_input_id: int) -> void:
+		position = server_pos
+
+# END <---Client Netcode--->
+
+
+func add_currency(amount: int) -> void:
+	assert(amount >= 0)
+	currency += amount
+
 
 func take_damage(damage: int, area: Area2D, _attacker: Node) -> bool:
 	var took_damage: bool = false
@@ -251,23 +265,22 @@ func take_damage(damage: int, area: Area2D, _attacker: Node) -> bool:
 	if health <= 0:
 		die()
 	else:
-		slowdown_timer.start(slowdown_duration)
-		regen_timer.start(regen_cooldown)
+		$SlowdownTimer.start(slowdown_duration)
+		$RegenTimer.start(regen_cooldown)
 	return took_damage
-	
-	
-func on_regen_timer_timeout() -> void:
-	if is_alive:
-		health = 100
-		
 
-func on_slowdown_timer_timeout() -> void:
-	if is_alive:
+
+func on_RegenTimer_timeout() -> void:
+	if health > 0:
+		health = 100
+
+
+func on_SlowdownTimer_timeout() -> void:
+	if health > 0:
 		current_movement_speed = max_movement_speed
 
 
 func die() -> void:
-	is_alive = false
 	PlayerInfo.hud.show_reset_button()
 
 

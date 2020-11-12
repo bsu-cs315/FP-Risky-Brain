@@ -97,6 +97,10 @@ cast_to = Vector2( 0, 0 )
 collision_mask = 4
 
 [node name="InteractableRayCast" type="RayCast2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2( 0.75, 0.75 )
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
 enabled = true
 cast_to = Vector2( 0, 0 )
 collision_mask = 4
@@ -155,3 +159,9 @@ __meta__ = {
 }
 [connection signal="area_entered" from="Body/PlayerInteractArea" to="." method="_on_PlayerInteractArea_area_entered"]
 [connection signal="area_exited" from="Body/PlayerInteractArea" to="." method="_on_PlayerInteractArea_area_exited"]
+
+[node name="RegenTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="SlowdownTimer" type="Timer" parent="."]
+one_shot = true
