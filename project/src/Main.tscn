@@ -512,7 +512,6 @@ open_rot = 90.0
 [node name="WoodenDoor2" parent="Doors" instance=ExtResource( 9 )]
 position = Vector2( 0, 4 )
 rotation = -3.14159
-cost = 500
 open_rot = -260.0
 
 [node name="WoodenDoor4" parent="Doors" instance=ExtResource( 9 )]
@@ -551,10 +550,13 @@ position = Vector2( -468.5, 150 )
 cost = 1000
 refill_cost = 500
 
+[node name="WallShotgun2" parent="WallWeapons" instance=ExtResource( 13 )]
+position = Vector2( -3.71652, 83.6209 )
+
 [node name="WallShotgun3" parent="WallWeapons" instance=ExtResource( 13 )]
-position = Vector2( -468.5, 150 )
-cost = 1000
-refill_cost = 500
+position = Vector2( 47.4543, 162.542 )
+cost = 501
+refill_cost = 251
 
 [node name="WallAssaultRifle3" parent="WallWeapons" instance=ExtResource( 14 )]
 position = Vector2( 1014, 505 )

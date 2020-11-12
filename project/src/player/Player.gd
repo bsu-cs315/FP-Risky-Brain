@@ -28,6 +28,8 @@ var slowdown_timer:= Timer.new()
 var slowdown_duration:= 0.5
 var camera:= Camera2D.new()
 var current_weapon: Weapon
+var interactable_areas: Array
+var targeted_interactable: Interactable
 
 onready var bullet: Resource = load("res://src/weapons/Bullet.tscn")
 
@@ -69,6 +71,8 @@ func _server_tick() -> void:
 func _client_tick() -> void:
 	if name == "SinglePlayer":
 			owner_inputs = get_inputs(0)
+			get_targeted_interactable()
+			show_interactable_information()
 			move(owner_inputs)
 			return
 	if str(get_tree().get_network_unique_id()) == name:
@@ -153,11 +157,31 @@ func move(inputs: Dictionary) -> void:
 	var _linear_velocity = move_and_slide(velocity)
 
 
+func get_targeted_interactable() -> void:
+	targeted_interactable = null
+	if interactable_areas.size() > 0:
+		var possible_interactables: Array = []
+		for area in interactable_areas:
+			if player_can_interact(area.global_position) and area.is_interactable:
+				possible_interactables.append(area)
+		if possible_interactables.size() > 0:
+			var closest_area: Area2D = possible_interactables[0]
+			for area in possible_interactables:
+				if position.distance_to(area.global_position) < position.distance_to(closest_area.global_position):
+					closest_area = area
+			targeted_interactable = closest_area
+
+
+func show_interactable_information() -> void:
+	if targeted_interactable:
+		targeted_interactable.show_information(self)
+	else:
+		PlayerInfo.hud.set_interactable_label_text("")
+	
+
 func interact() -> void:
-	var overlapping_areas: Array = $Body/PlayerInteractArea.get_overlapping_areas()
-	for area in overlapping_areas:
-		if area.has_method("interact"):
-			area.interact(self)
+	if targeted_interactable:
+		targeted_interactable.interact(self)
 
 
 func get_movement_dir(inputs: Dictionary) -> Vector2:
@@ -203,8 +227,19 @@ func add_currency(amount: int) -> void:
 
 
 func weapon_can_fire() -> bool:
-	$RayCast2D.cast_to = Vector2(current_weapon.shoot_point_node.position.x, current_weapon.shoot_point_node.position.y)
-	return not $RayCast2D.is_colliding()
+	$WeaponShootPointRayCast.cast_to = Vector2(current_weapon.shoot_point_node.position.x, current_weapon.shoot_point_node.position.y)
+	return not $WeaponShootPointRayCast.is_colliding()
+	
+	
+func player_can_interact(interactable_pos: Vector2) -> bool:
+	$InteractableRayCast.cast_to = (interactable_pos - position).rotated(-rotation)
+	$InteractableRayCast.force_raycast_update()
+	if $InteractableRayCast.is_colliding():
+		if $InteractableRayCast.get_collider().owner is Interactable:
+			return true
+		else:
+			return false
+	return true
 
 
 func take_damage(damage: int, area: Area2D, _attacker: Node) -> bool:
@@ -234,6 +269,13 @@ func on_slowdown_timer_timeout() -> void:
 func die() -> void:
 	is_alive = false
 	PlayerInfo.hud.show_reset_button()
-	
 
 
+func _on_PlayerInteractArea_area_entered(area: Area2D):
+	if area is Interactable:
+		interactable_areas.append(area)
+
+
+func _on_PlayerInteractArea_area_exited(area):
+	if area is Interactable:
+		interactable_areas.erase(area)
