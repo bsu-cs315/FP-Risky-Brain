@@ -18,9 +18,14 @@ func _ready() -> void:
 
 
 func spawn_enemy() -> void:
-	var random_spawn_point_index: int = rng.randi_range(0, spawn_points.size() - 1)
-	var random_spawn_point: Node2D = spawn_points[random_spawn_point_index]
 	var random_spawn_timer_cooldown: float = rng.randf_range(1, 3)
+	var available_spawn_points:= []
+	for i in range(spawn_points.size()):
+		var spawn_point = spawn_points[i]
+		if spawn_point.can_spawn():
+			available_spawn_points.append(spawn_point)
+	var random_spawn_point_index: int = rng.randi_range(0, available_spawn_points.size() - 1)
+	var random_spawn_point: Node2D = available_spawn_points[random_spawn_point_index]
 	
 	spawn_timer.start(random_spawn_timer_cooldown)
 	if Server.is_multiplayer:

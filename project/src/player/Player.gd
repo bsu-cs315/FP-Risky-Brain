@@ -14,7 +14,7 @@ var shoot_dir: Vector2
 
 # player info
 var current_weapon: Weapon
-var currency:= 1000
+var currency:= 100000
 var health: int = 100
 var inventory:= Inventory.new()
 var interactable_areas: Array

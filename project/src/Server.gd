@@ -17,7 +17,7 @@ var player_info = { }
 
 func _ready() -> void:
 	var args = Array(OS.get_cmdline_args())
-	if args != null && args.has("-s"):
+	if args != null and args.has("-s"):
 		get_node("/root/Title").queue_free()
 		print("Starting Server")
 		configure_server()

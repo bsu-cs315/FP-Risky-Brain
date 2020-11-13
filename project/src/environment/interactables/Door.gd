@@ -1,3 +1,4 @@
+class_name Door
 extends Interactable
 
 
@@ -23,7 +24,7 @@ func interact(interactor: Node2D) -> void:
 
 func unlock(delta: float) -> void:
 	rotation_degrees = lerp(rotation_degrees, open_rot, delta)
-	if open_rot == rotation_degrees:
+	if abs(open_rot - rotation_degrees) <= 1:
 		opened = true
 		
 		
