@@ -1,7 +1,7 @@
 extends Node
 
-const SERVER_URL = "wss://kadedentel.com:403"
-#const SERVER_URL = "ws://localhost:403"
+#const SERVER_URL = "wss://kadedentel.com:403"
+const SERVER_URL = "ws://localhost:403"
 const SERVER_PORT = 403
 
 var client : WebSocketClient
@@ -72,6 +72,7 @@ remote func register_player(info: Dictionary) -> void:
 
 
 remote func start_game() -> void:
+	is_multiplayer = true
 	print("Starting game")
 	 # if not game already started
 	if not multiplayer_game_started:

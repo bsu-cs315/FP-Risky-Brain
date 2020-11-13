@@ -25,7 +25,7 @@ var owner_inputs : Dictionary
 var past_player_inputs:= {}
 var past_player_positions := {}
 
-# puppet info
+# puppet inputs / pos
 var puppet_inputs : Dictionary
 var puppet_position:= Vector2.ZERO
 var puppet_rotation:= 0.0
@@ -43,7 +43,7 @@ onready var bullet: Resource = load("res://src/weapons/Bullet.tscn")
 func _ready() -> void:
 	inventory.primary = load("res://src/weapons/Pistol.gd").new(self)
 	change_current_weapon(inventory.primary)
-	if name == "SinglePlayer" || is_network_master():
+	if not Server.is_multiplayer || is_network_master():
 		$Camera2D.current = true
 
 
@@ -70,7 +70,7 @@ remote func send_player_inputs(data: Dictionary) -> void:
 
 
 func _client_tick() -> void:
-	if name == "SinglePlayer":
+	if not Server.is_multiplayer:
 			owner_inputs = get_inputs(0)
 			get_targeted_interactable()
 			show_interactable_information()
@@ -249,7 +249,7 @@ func take_damage(damage: int, area: Area2D, _attacker: Node) -> bool:
 	var took_damage: bool = false
 	if area.name == "PlayerArea":
 		health -= damage
-		current_movement_speed *= 0.8
+#		current_movement_speed = 0.8 * max_movement_speed
 		took_damage = true
 	if health <= 0:
 		die()

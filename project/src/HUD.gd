@@ -20,7 +20,8 @@ func set_interactable_label_text(text: String) -> void:
 
 
 func show_reset_button() -> void:
-	$Control/ResetButton.show()
+	if Server.server == null:
+		$Control/ResetButton.show()
 	
 
 func _on_ResetButton_pressed() -> void:

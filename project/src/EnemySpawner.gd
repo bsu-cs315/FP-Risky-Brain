@@ -21,8 +21,16 @@ func spawn_enemy() -> void:
 	var random_spawn_point_index: int = rng.randi_range(0, spawn_points.size() - 1)
 	var random_spawn_point: Node2D = spawn_points[random_spawn_point_index]
 	var random_spawn_timer_cooldown: float = rng.randf_range(1, 3)
-	var new_enemy: Node2D = zombie.instance()
-	get_parent().add_child(new_enemy)
-	new_enemy.position = random_spawn_point.position
-	spawn_timer.start(random_spawn_timer_cooldown)
 	
+	spawn_timer.start(random_spawn_timer_cooldown)
+	if Server.is_multiplayer:
+		print("Added multiplayer enemy")
+		rpc("add_enemy", random_spawn_point.position)
+	else:
+		add_enemy(random_spawn_point.position)
+
+
+remotesync func add_enemy(position: Vector2):
+	var enemy: Node2D = zombie.instance()
+	enemy.position = position
+	get_parent().add_child(enemy)

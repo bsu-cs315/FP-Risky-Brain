@@ -11,6 +11,10 @@ func _ready() -> void:
 
 
 func _process(_delta) -> void:
+	show_dirt_particles()
+
+
+func show_dirt_particles() -> void:
 	for player in $Players.get_children():
 		player = player as Node
 		var tile_coord = floors.world_to_map(player.position)
