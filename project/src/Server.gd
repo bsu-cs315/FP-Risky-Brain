@@ -1,6 +1,6 @@
 extends Node
 
-#const SERVER_URL = "wss://kadedentel.com:403"
+# const SERVER_URL = "wss://kadedentel.com:403"
 const SERVER_URL = "ws://localhost:403"
 const SERVER_PORT = 403
 
@@ -12,8 +12,9 @@ var is_multiplayer := false
 
 var multiplayer_game_started := false
 
-var players_in_game : Dictionary # Player Nodes
-var player_info = { }
+var player_nodes : Dictionary
+var players_in_lobby:= []
+
 
 func _ready() -> void:
 	var args = Array(OS.get_cmdline_args())
@@ -55,20 +56,26 @@ func enable_ssl() -> void:
 
 func client_connected_to_server(id) -> void:
 	print("Player %d connected" % id)
+	players_in_lobby.append(id)
+	rpc("get_game_info", players_in_lobby)
+	
+
+remote func get_game_info(players: Array) -> void:
+	players_in_lobby = players
 
 
 func client_disconnected_from_server(id) -> void:
 	print("player %d disconnected" % id)
-	player_info.erase(id)
-	if id in players_in_game.keys():
-		get_node("/root/World/Players").remove_child(players_in_game[id])
-	if players_in_game.size() == 0:
+	players_in_lobby.erase(id)
+	if id in player_nodes.keys():
+		get_node("/root/World/Players").remove_child(player_nodes[id])
+	if player_nodes.size() == 0:
 		end_game()
 
 
 remote func register_player(info: Dictionary) -> void:
 	print("registered")
-	player_info[get_tree().get_rpc_sender_id()] = info
+	players_in_lobby[get_tree().get_rpc_sender_id()] = info
 
 
 remote func start_game() -> void:
@@ -76,13 +83,13 @@ remote func start_game() -> void:
 	print("Starting game")
 	 # if not game already started
 	if not multiplayer_game_started:
-		rpc("configure_multiplayer_game", player_info)
+		rpc("configure_multiplayer_game")
 
 
 func end_game() -> void:
 	get_node("/root/World").queue_free()
-	player_info.clear()
-	players_in_game.clear()
+	players_in_lobby.clear()
+	player_nodes.clear()
 	multiplayer_game_started = false
 
 
@@ -122,9 +129,8 @@ func connect_to_server() -> void:
 	get_tree().network_peer = client
 
 
-remotesync func configure_multiplayer_game(info: Dictionary) -> void:
-	player_info = info
-	
+remotesync func configure_multiplayer_game() -> void:
+	multiplayer_game_started = true
 	if not get_tree().is_network_server():
 		get_node("/root/LobbyMenu").queue_free()
 	# Load world
@@ -132,11 +138,12 @@ remotesync func configure_multiplayer_game(info: Dictionary) -> void:
 	get_node("/root").add_child(world)
 
 	# Load players
-	for p in player_info:
+	for player_id in players_in_lobby:
 		var player = preload("res://src/player/Player.tscn").instance()
-		player.set_name(str(p))
-		player.set_network_master(p)
+		player.set_name(str(player_id))
+		player.set_network_master(player_id)
 		get_node("/root/World/Players").add_child(player)
+		player_nodes[player_id] = player
 		player.position = get_node("/root/World/PlayerSpawnPoint").position
 	PlayerInfo.init_player_nodes()
 

@@ -22,7 +22,7 @@ func set_interactable_label_text(text: String) -> void:
 func show_reset_button() -> void:
 	if Server.server == null:
 		$Control/ResetButton.show()
-	
+		
 
 func _on_ResetButton_pressed() -> void:
 	get_tree().call_group("Enemies", "queue_free")

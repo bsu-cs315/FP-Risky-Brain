@@ -41,10 +41,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -264.5
-margin_top = -136.0
-margin_right = 264.5
-margin_bottom = -32.0
+margin_left = -263.5
+margin_top = -40.0
+margin_right = 265.5
+margin_bottom = 64.0
 text = "SHOTGUN FIRE SOUND
 Downloaded from: http://soundbible.com/2095-Mossberg-500-Pump-Shotgun.html
 License: https://creativecommons.org/licenses/by/3.0/legalcode
@@ -55,15 +55,34 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="PistolFire" type="Label" parent="Container"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -264.0
+margin_top = -176.0
+margin_right = 265.0
+margin_bottom = -72.0
+text = "PISTOL FIRE SOUND
+Downloaded from: http://soundbible.com/2120-9mm-Gunshot.html
+License: https://creativecommons.org/licenses/by/3.0/legalcode
+Title: 9mm Gunshot
+Creator: Mike Koenig
+Adaptation: Clipped and bass boosted."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="AssaultRifleFire" type="Label" parent="Container"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -264.5
-margin_top = 46.0
-margin_right = 264.5
-margin_bottom = 162.0
+margin_left = -264.0
+margin_top = 94.0
+margin_right = 265.0
+margin_bottom = 210.0
 text = "ASSAULT RIFLE FIRE SOUND
 Downloaded from: http://soundbible.com/1804-M4A1-Single.html
 License: https://creativecommons.org/licenses/by/3.0/legalcode
