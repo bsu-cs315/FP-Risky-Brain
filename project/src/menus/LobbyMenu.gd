@@ -11,16 +11,17 @@ func _process(_delta) -> void:
 
 
 func _on_StartButton_pressed() -> void:
-	Server.is_multiplayer = true
 	if Server.is_network_connected:
 		Server.rpc_id(1, "start_game")
 
 
 func _on_JoinButton_pressed() -> void:
-	Server.connect_to_server()
+	Server.rpc_id(1, 'join_game')
 	$JoinButton.hide()
 	$StartButton.show()
 
 
 func _on_BackButton_pressed() -> void:
+	Server.client = null
+	get_tree().network_peer = Server.client
 	var _err = get_tree().change_scene("res://src/menus/Title.tscn")

@@ -6,6 +6,7 @@ func _on_PlayButton_pressed() -> void:
 
 
 func _on_MultiplayerButton_pressed() -> void:
+	Server.connect_to_server()
 	var _change_scene_err = get_tree().change_scene("res://src/menus/LobbyMenu.tscn")
 
 

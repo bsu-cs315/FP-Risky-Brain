@@ -26,5 +26,6 @@ func show_reset_button() -> void:
 
 func _on_ResetButton_pressed() -> void:
 	get_tree().call_group("Enemies", "queue_free")
+	Server.rpc_id(1, "leave_game")
 	get_node("/root/World").queue_free()
 	var _err_change_scene = get_tree().change_scene("res://src/menus/Title.tscn")

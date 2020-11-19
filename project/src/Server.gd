@@ -8,12 +8,10 @@ var client : WebSocketClient
 var server : WebSocketServer
 var is_network_connected := false
 
-var is_multiplayer := false
-
 var multiplayer_game_started := false
 
 var player_nodes : Dictionary
-var players_in_lobby:= []
+var players_in_lobby:= [] #ids of players
 
 
 func _ready() -> void:
@@ -56,30 +54,42 @@ func enable_ssl() -> void:
 
 func client_connected_to_server(id) -> void:
 	print("Player %d connected" % id)
-	players_in_lobby.append(id)
-	rpc("get_game_info", players_in_lobby)
+	rpc("get_game_info", players_in_lobby, multiplayer_game_started)
 	
 
-remote func get_game_info(players: Array) -> void:
+remote func get_game_info(players: Array, game_running: bool) -> void:
 	players_in_lobby = players
+	multiplayer_game_started = game_running
+	print("Got game info")
 
 
 func client_disconnected_from_server(id) -> void:
 	print("player %d disconnected" % id)
 	players_in_lobby.erase(id)
 	if id in player_nodes.keys():
-		get_node("/root/World/Players").remove_child(player_nodes[id])
-	if player_nodes.size() == 0:
+		player_nodes[id].free()
+	if players_in_lobby.size() == 0:
+		end_game()
+	else:
+		print("Still %d players in game" % player_nodes.size())
+	
+	
+remote func join_game() -> void:
+	if not multiplayer_game_started:
+		print("joined game")
+		players_in_lobby.append(get_tree().get_rpc_sender_id())
+		rpc("get_game_info", players_in_lobby, multiplayer_game_started)
+	else:
+		print("couldnt join")
+
+
+remote func leave_game() -> void:
+	players_in_lobby.erase(get_tree().get_rpc_sender_id())
+	if players_in_lobby.size() == 0:
 		end_game()
 
 
-remote func register_player(info: Dictionary) -> void:
-	print("registered")
-	players_in_lobby[get_tree().get_rpc_sender_id()] = info
-
-
 remote func start_game() -> void:
-	is_multiplayer = true
 	print("Starting game")
 	 # if not game already started
 	if not multiplayer_game_started:
@@ -87,6 +97,7 @@ remote func start_game() -> void:
 
 
 func end_game() -> void:
+	print("ending game")
 	get_node("/root/World").queue_free()
 	players_in_lobby.clear()
 	player_nodes.clear()
@@ -108,7 +119,6 @@ func _physics_process(_delta: float) -> void:
 
 func client_connected_ok() -> void:
 	is_network_connected = true
-	rpc_id(1, "register_player", {position = Vector2.ZERO})
 
 
 func client_connected_fail() -> void:
