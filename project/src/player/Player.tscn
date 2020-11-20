@@ -162,7 +162,5 @@ one_shot = true
 
 [node name="RegenTimer" type="Timer" parent="."]
 one_shot = true
-[connection signal="area_entered" from="Body/PlayerInteractArea" to="." method="_on_PlayerInteractArea_area_entered"]
-[connection signal="area_exited" from="Body/PlayerInteractArea" to="." method="_on_PlayerInteractArea_area_exited"]
 [connection signal="timeout" from="SlowdownTimer" to="." method="_on_SlowdownTimer_timeout"]
 [connection signal="timeout" from="RegenTimer" to="." method="_on_RegenTimer_timeout"]

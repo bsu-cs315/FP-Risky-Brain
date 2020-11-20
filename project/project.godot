@@ -47,7 +47,7 @@ output_latency=0
 
 [autoload]
 
-Server="*res://src/Server.tscn"
+GameState="*res://src/GameState.tscn"
 PlayerInfo="*res://src/player/PlayerInfo.gd"
 
 [display]

@@ -27,6 +27,8 @@ func find_player() -> void:
 
 
 func move_toward_player() -> void:
+	if target == null:
+		return
 	movement_dir = position.direction_to(target.position)
 	var _linear_velocity = move_and_slide(movement_dir * movement_speed)
 	rotation = movement_dir.angle() - (PI / 2)

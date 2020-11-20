@@ -9,7 +9,7 @@ onready var zombie: Resource = load("res://src/enemies/Zombie.tscn")
 
 
 func _ready() -> void:
-	if not Server.is_network_connected || get_tree().is_network_server():
+	if get_tree().is_network_server():
 		rng.randomize()
 		add_child(spawn_timer)
 		var _err_func_timer_timeout = spawn_timer.connect("timeout", self, "spawn_enemy")
@@ -28,7 +28,7 @@ func spawn_enemy() -> void:
 	var random_spawn_point: Node2D = available_spawn_points[random_spawn_point_index]
 	
 	spawn_timer.start(random_spawn_timer_cooldown)
-	if Server.server != null:
+	if GameState.is_server:
 		print("Added multiplayer enemy")
 		rpc("add_enemy", random_spawn_point.position)
 	else:

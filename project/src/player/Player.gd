@@ -17,8 +17,7 @@ var current_weapon: Weapon
 var currency:= 100000
 var health: int = 100
 var inventory:= Inventory.new()
-var interactable_areas: Array
-var targeted_interactable: Interactable
+
 
 # player inputs / pos
 var owner_inputs : Dictionary
@@ -43,12 +42,12 @@ onready var bullet: Resource = load("res://src/weapons/Bullet.tscn")
 func _ready() -> void:
 	inventory.primary = load("res://src/weapons/Pistol.gd").new(self)
 	change_current_weapon(inventory.primary)
-	if not Server.is_network_connected || is_network_master():
+	if GameState.is_client && is_network_master():
 		$Camera2D.current = true
 
 
 func _physics_process(_delta: float) -> void:
-	if Server.server != null:
+	if GameState.is_server:
 		_server_tick()
 	elif health > 0:
 		_client_tick()
@@ -56,6 +55,8 @@ func _physics_process(_delta: float) -> void:
 # <---Server-Exclusive Functions--->
 
 func _server_tick() -> void:
+	if not get_tree().is_network_server():
+		return
 	if not inputs_to_be_processed.empty():
 		move(inputs_to_be_processed[0])
 		rpc("send_puppet_data", inputs_to_be_processed[0], position, rotation)
@@ -70,7 +71,7 @@ remote func send_player_inputs(data: Dictionary) -> void:
 
 
 func _client_tick() -> void:
-	if not Server.is_network_connected:
+	if not GameState.is_client_connected_to_server(): # Single Player
 			owner_inputs = get_inputs(0)
 			get_targeted_interactable()
 			show_interactable_information()
@@ -131,8 +132,18 @@ func move(inputs: Dictionary) -> void:
 	var _linear_velocity = move_and_slide(velocity)
 
 
-func get_targeted_interactable() -> void:
-	targeted_interactable = null
+func get_interactable_areas() -> Array:
+	var overlapping_areas : Array = $Body/PlayerInteractArea.get_overlapping_areas()
+	var interactable_areas := []
+	for area in overlapping_areas:
+		if area is Interactable:
+			interactable_areas.append(area)
+	return interactable_areas
+
+
+func get_targeted_interactable() -> Interactable:
+	var interactable_areas:= get_interactable_areas()
+	var targeted_interactable: Interactable
 	if interactable_areas.size() > 0:
 		var possible_interactables: Array = []
 		for area in interactable_areas:
@@ -144,16 +155,19 @@ func get_targeted_interactable() -> void:
 				if position.distance_to(area.global_position) < position.distance_to(closest_area.global_position):
 					closest_area = area
 			targeted_interactable = closest_area
+	return targeted_interactable
 
 
 func show_interactable_information() -> void:
-	if targeted_interactable:
+	var targeted_interactable := get_targeted_interactable()
+	if get_targeted_interactable():
 		targeted_interactable.show_information(self)
 	else:
 		PlayerInfo.hud.set_interactable_label_text("")
-	
+
 
 func interact() -> void:
+	var targeted_interactable := get_targeted_interactable()
 	if targeted_interactable:
 		targeted_interactable.interact(self)
 
@@ -261,16 +275,6 @@ func take_damage(damage: int, area: Area2D, _attacker: Node) -> bool:
 
 func die() -> void:
 	PlayerInfo.hud.show_reset_button()
-
-
-func _on_PlayerInteractArea_area_entered(area: Area2D):
-	if area is Interactable:
-		interactable_areas.append(area)
-
-
-func _on_PlayerInteractArea_area_exited(area):
-	if area is Interactable:
-		interactable_areas.erase(area)
 
 
 func _on_RegenTimer_timeout():

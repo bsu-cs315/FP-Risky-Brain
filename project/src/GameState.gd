@@ -1,14 +1,16 @@
 extends Node
 
-const SERVER_URL = "wss://kadedentel.com:403"
-# const SERVER_URL = "ws://localhost:403"
+#const SERVER_URL = "wss://kadedentel.com:403"
+const SERVER_URL = "ws://localhost:403"
 const SERVER_PORT = 403
 
-var client : WebSocketClient
+var networked_client : WebSocketClient
 var server : WebSocketServer
-var is_network_connected := false
 
-var multiplayer_game_started := false
+var is_client := false
+var is_server := false
+
+var is_networked_game_running := false
 
 var player_nodes : Dictionary
 var players_in_lobby:= [] #ids of players
@@ -19,9 +21,11 @@ func _ready() -> void:
 	if args != null and args.has("-s"):
 		get_node("/root/Title").queue_free()
 		print("Starting Server")
+		is_server = true
 		configure_server()
 	else:
 		print("Starting Client")
+		is_client = true
 		var _change_scene_err = get_tree().change_scene("res://src/menus/Title.tscn")
 		configure_client()
 
@@ -54,12 +58,12 @@ func enable_ssl() -> void:
 
 func client_connected_to_server(id) -> void:
 	print("Player %d connected" % id)
-	rpc("get_game_info", players_in_lobby, multiplayer_game_started)
+	rpc("get_game_info", players_in_lobby, is_networked_game_running)
 	
 
 remote func get_game_info(players: Array, game_running: bool) -> void:
 	players_in_lobby = players
-	multiplayer_game_started = game_running
+	is_networked_game_running = game_running
 	print("Got game info")
 
 
@@ -75,10 +79,10 @@ func client_disconnected_from_server(id) -> void:
 	
 	
 remote func join_game() -> void:
-	if not multiplayer_game_started:
+	if not is_networked_game_running:
 		print("joined game")
 		players_in_lobby.append(get_tree().get_rpc_sender_id())
-		rpc("get_game_info", players_in_lobby, multiplayer_game_started)
+		rpc("get_game_info", players_in_lobby, is_networked_game_running)
 	else:
 		print("couldnt join")
 
@@ -92,7 +96,7 @@ remote func leave_game() -> void:
 remote func start_game() -> void:
 	print("Starting game")
 	 # if not game already started
-	if not multiplayer_game_started:
+	if not is_networked_game_running:
 		rpc("configure_multiplayer_game")
 
 
@@ -101,7 +105,7 @@ func end_game() -> void:
 	get_node("/root/World").queue_free()
 	players_in_lobby.clear()
 	player_nodes.clear()
-	multiplayer_game_started = false
+	is_networked_game_running = false
 
 
 func configure_client() -> void:
@@ -113,12 +117,18 @@ func configure_client() -> void:
 func _physics_process(_delta: float) -> void:
 	if server != null && server.is_listening():
 		server.poll()
-	if client != null && client.get_connection_status() == NetworkedMultiplayerPeer.CONNECTION_CONNECTED:
-		client.poll()
+	if is_client_connected_to_server():
+		networked_client.poll()
+
+
+func is_client_connected_to_server() -> bool:
+	if networked_client != null:
+		return networked_client.get_connection_status() == NetworkedMultiplayerPeer.CONNECTION_CONNECTED
+	return false
 
 
 func client_connected_ok() -> void:
-	is_network_connected = true
+	print("Connected to server")
 
 
 func client_connected_fail() -> void:
@@ -126,21 +136,20 @@ func client_connected_fail() -> void:
 	
 
 func client_disconnected() -> void:
-	is_network_connected = false
 	print("Server kicked us")
 
 
 func connect_to_server() -> void:
-	client = WebSocketClient.new()
-	var create_client_error = client.connect_to_url(SERVER_URL, PoolStringArray(), true)
+	networked_client = WebSocketClient.new()
+	var create_client_error = networked_client.connect_to_url(SERVER_URL, PoolStringArray(), true)
 	if create_client_error != OK:
 		print("Create client error: " + str(create_client_error))
 		return 
-	get_tree().network_peer = client
+	get_tree().network_peer = networked_client
 
 
 remotesync func configure_multiplayer_game() -> void:
-	multiplayer_game_started = true
+	is_networked_game_running = true
 	if not get_tree().is_network_server():
 		get_node("/root/LobbyMenu").queue_free()
 	# Load world

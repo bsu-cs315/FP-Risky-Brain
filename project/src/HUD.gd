@@ -2,7 +2,7 @@ extends CanvasLayer
 
 
 func _process(_delta) -> void:
-	if Server.server == null:
+	if GameState.is_client:
 		var my_player:= PlayerInfo.get_owned_player()
 		$Control.show()
 		$Control/CurrencyLabel.text = "$" + str(my_player.currency)
@@ -20,12 +20,12 @@ func set_interactable_label_text(text: String) -> void:
 
 
 func show_reset_button() -> void:
-	if Server.server == null:
+	if GameState.is_client:
 		$Control/ResetButton.show()
 		
 
 func _on_ResetButton_pressed() -> void:
 	get_tree().call_group("Enemies", "queue_free")
-	Server.rpc_id(1, "leave_game")
+	GameState.rpc_id(1, "leave_game")
 	get_node("/root/World").queue_free()
 	var _err_change_scene = get_tree().change_scene("res://src/menus/Title.tscn")

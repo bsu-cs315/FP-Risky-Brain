@@ -7,7 +7,7 @@ func _process(_delta):
 
 
 func pause_game() -> void:
-	if !Server.is_network_connected:
+	if !GameState.is_network_connected:
 		get_tree().paused = true
 		$Control.show()
 
