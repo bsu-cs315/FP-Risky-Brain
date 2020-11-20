@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+signal died
+
 
 export var max_movement_speed: float = 250.0
 
@@ -42,7 +44,7 @@ onready var bullet: Resource = load("res://src/weapons/Bullet.tscn")
 func _ready() -> void:
 	inventory.primary = load("res://src/weapons/Pistol.gd").new(self)
 	change_current_weapon(inventory.primary)
-	if GameState.is_client && is_network_master():
+	if GameState.networked_client == null || is_network_master():
 		$Camera2D.current = true
 
 
@@ -72,10 +74,9 @@ remote func send_player_inputs(data: Dictionary) -> void:
 
 func _client_tick() -> void:
 	if not GameState.is_client_connected_to_server(): # Single Player
-			owner_inputs = get_inputs(0)
-			get_targeted_interactable()
-			show_interactable_information()
-			move(owner_inputs)
+		owner_inputs = get_inputs(0)
+		show_interactable_information()
+		move(owner_inputs)
 	elif is_network_master():
 		move_owned_network_player()
 	else:
@@ -275,6 +276,7 @@ func take_damage(damage: int, area: Area2D, _attacker: Node) -> bool:
 
 func die() -> void:
 	PlayerInfo.hud.show_reset_button()
+	emit_signal("died")
 
 
 func _on_RegenTimer_timeout():

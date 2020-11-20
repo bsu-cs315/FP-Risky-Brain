@@ -12,7 +12,7 @@ func _process(_delta) -> void:
 
 func _on_StartButton_pressed() -> void:
 	if GameState.is_client_connected_to_server():
-		GameState.rpc_id(1, "start_game")
+		GameState.rpc_id(1, "start_server_game")
 
 
 func _on_JoinButton_pressed() -> void:
@@ -23,5 +23,5 @@ func _on_JoinButton_pressed() -> void:
 
 func _on_BackButton_pressed() -> void:
 	GameState.networked_client = null
-	get_tree().network_peer = GameState.client
+	get_tree().network_peer = GameState.networked_client
 	var _err = get_tree().change_scene("res://src/menus/Title.tscn")

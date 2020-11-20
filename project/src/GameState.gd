@@ -73,7 +73,7 @@ func client_disconnected_from_server(id) -> void:
 	if id in player_nodes.keys():
 		player_nodes[id].free()
 	if players_in_lobby.size() == 0:
-		end_game()
+		end_server_game()
 	else:
 		print("Still %d players in game" % player_nodes.size())
 	
@@ -90,22 +90,40 @@ remote func join_game() -> void:
 remote func leave_game() -> void:
 	players_in_lobby.erase(get_tree().get_rpc_sender_id())
 	if players_in_lobby.size() == 0:
-		end_game()
+		end_server_game()
 
 
-remote func start_game() -> void:
+func leave_multiplayer_game() -> void:
+	networked_client = null
+	GameState.rpc_id(1, "leave_game")
+	get_tree().call_group("Enemies", "queue_free")
+	get_node("/root/World").queue_free()
+	var _err_change_scene = get_tree().change_scene("res://src/menus/Title.tscn")
+
+
+func leave_singleplayer_game() -> void:
+	get_tree().call_group("Enemies", "queue_free")
+	get_node("/root/World").queue_free()
+	var _err_change_scene = get_tree().change_scene("res://src/menus/Title.tscn")
+
+
+remote func start_server_game() -> void:
 	print("Starting game")
 	 # if not game already started
-	if not is_networked_game_running:
+	if not is_networked_game_running && get_tree().is_network_server():
 		rpc("configure_multiplayer_game")
 
 
-func end_game() -> void:
+func end_server_game() -> void:
 	print("ending game")
 	get_node("/root/World").queue_free()
 	players_in_lobby.clear()
 	player_nodes.clear()
 	is_networked_game_running = false
+
+
+func end_client_game() -> void:
+	leave_multiplayer_game()
 
 
 func configure_client() -> void:
@@ -159,6 +177,7 @@ remotesync func configure_multiplayer_game() -> void:
 	# Load players
 	for player_id in players_in_lobby:
 		var player = preload("res://src/player/Player.tscn").instance()
+		player.connect("died", self, "on_networked_player_died", [player_id])
 		player.set_name(str(player_id))
 		player.set_network_master(player_id)
 		get_node("/root/World/Players").add_child(player)
@@ -176,3 +195,14 @@ func configure_singleplayer_game() -> void:
 	get_node("/root/World/Players").add_child(player)
 	player.position = get_node("/root/World/PlayerSpawnPoint").position
 	PlayerInfo.init_player_nodes()
+
+
+func on_networked_player_died(id: int) -> void:
+	if get_tree().is_network_server():
+		if player_nodes.size() == 1:
+			end_server_game()
+		else:
+			player_nodes[id].queue_free()
+	else:
+		end_client_game()
+	

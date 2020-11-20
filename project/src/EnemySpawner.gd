@@ -9,7 +9,7 @@ onready var zombie: Resource = load("res://src/enemies/Zombie.tscn")
 
 
 func _ready() -> void:
-	if get_tree().is_network_server():
+	if GameState.networked_client == null || GameState.is_server:
 		rng.randomize()
 		add_child(spawn_timer)
 		var _err_func_timer_timeout = spawn_timer.connect("timeout", self, "spawn_enemy")
