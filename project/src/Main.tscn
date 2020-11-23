@@ -471,41 +471,42 @@ scale = Vector2( 1, 6.785 )
 
 [node name="WoodenDoor" parent="Doors" instance=ExtResource( 9 )]
 position = Vector2( 0, 512 )
-cost = 999999
+cost = 9999999
 open_rot = 90.0
 
 [node name="WoodenDoor2" parent="Doors" instance=ExtResource( 9 )]
 position = Vector2( 0, 4 )
 rotation = -3.14159
+cost = 1000
 open_rot = -260.0
 
 [node name="WoodenDoor4" parent="Doors" instance=ExtResource( 9 )]
 position = Vector2( -68, 448 )
 rotation = -1.5708
-cost = 750
+cost = 1250
 open_rot = -260.0
 
 [node name="WoodenDoor5" parent="Doors" instance=ExtResource( 9 )]
 position = Vector2( 132, 352 )
 rotation = 1.5708
-cost = 500
+cost = 1500
 open_rot = -80.0
 
 [node name="WoodenDoor6" parent="Doors" instance=ExtResource( 9 )]
 position = Vector2( 548, 224 )
 rotation = 1.5708
-cost = 1500
+cost = 2750
 open_rot = -80.0
 
 [node name="WoodenDoor7" parent="Doors" instance=ExtResource( 9 )]
 position = Vector2( 828, 0 )
 rotation = 1.5708
-cost = 500
+cost = 1250
 open_rot = -80.0
 
 [node name="WoodenDoor3" parent="Doors" instance=ExtResource( 9 )]
 position = Vector2( -384, -100 )
-cost = 500
+cost = 1500
 open_rot = -170.0
 
 [node name="WallWeapons" type="Node" parent="."]
@@ -513,21 +514,55 @@ open_rot = -170.0
 [node name="WallShotgun" parent="WallWeapons" instance=ExtResource( 13 )]
 position = Vector2( -468.5, 150 )
 cost = 1000
-refill_cost = 500
+refill_cost = 800
+
+[node name="WallShotgun4" parent="WallWeapons" instance=ExtResource( 13 )]
+position = Vector2( -468.5, 477 )
+cost = 1000
+refill_cost = 800
 
 [node name="WallShotgun2" parent="WallWeapons" instance=ExtResource( 13 )]
-position = Vector2( -3.71652, 83.6209 )
+position = Vector2( 459.5, 566 )
+rotation = 3.14159
+cost = 1000
+refill_cost = 800
 
 [node name="WallShotgun3" parent="WallWeapons" instance=ExtResource( 13 )]
-position = Vector2( 47.4543, 162.542 )
-cost = 501
-refill_cost = 251
+position = Vector2( 1012.5, -71 )
+rotation = 3.14159
+cost = 1000
+refill_cost = 800
 
 [node name="WallAssaultRifle3" parent="WallWeapons" instance=ExtResource( 14 )]
 position = Vector2( 1014, 505 )
 cost = 2000
-refill_cost = 1000
+refill_cost = 1600
+
+[node name="WallAssaultRifle5" parent="WallWeapons" instance=ExtResource( 14 )]
+position = Vector2( 438, 391 )
+cost = 2000
+refill_cost = 1600
+
+[node name="WallAssaultRifle4" parent="WallWeapons" instance=ExtResource( 14 )]
+position = Vector2( -2, -210.5 )
+cost = 2000
+refill_cost = 1600
 
 [node name="WallPistol" parent="WallWeapons" instance=ExtResource( 18 )]
 position = Vector2( 244, 285.5 )
 rotation = -1.5708
+refill_cost = 400
+
+[node name="WallPistol3" parent="WallWeapons" instance=ExtResource( 18 )]
+position = Vector2( -267, 725.5 )
+rotation = -1.5708
+refill_cost = 400
+
+[node name="WallPistol2" parent="WallWeapons" instance=ExtResource( 18 )]
+position = Vector2( 834.5, -81 )
+refill_cost = 400
+
+[node name="WallPistol4" parent="WallWeapons" instance=ExtResource( 18 )]
+position = Vector2( 729, 170.5 )
+rotation = 1.5708
+refill_cost = 400

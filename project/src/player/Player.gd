@@ -16,7 +16,7 @@ var shoot_dir: Vector2
 
 # player info
 var current_weapon: Weapon
-var currency:= 100000
+var currency:= 10000
 var health: int = 100
 var inventory:= Inventory.new()
 
@@ -146,7 +146,6 @@ func get_interactable_areas() -> Array:
 func get_targeted_interactable() -> Interactable:
 	var interactable_areas:= get_interactable_areas()
 	var targeted_interactable: Interactable
-	print(interactable_areas.size())
 	if interactable_areas.size() > 0:
 		var possible_interactables: Array = []
 		for area in interactable_areas:
@@ -165,7 +164,6 @@ func show_interactable_information() -> void:
 	var targeted_interactable := get_targeted_interactable()
 	if get_targeted_interactable():
 		targeted_interactable.show_information(self)
-		print("hi")
 	else:
 		PlayerInfo.hud.set_interactable_label_text("")
 
