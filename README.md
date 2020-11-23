@@ -6,7 +6,7 @@ A 2D game made in Godot by kade-d and adamgack.
 
 ## Instructions
 
-Use `W` `A` `S` `D` to move your player. Use `left-click` to shoot. Use `R` to reload. Use `E` to interact with objects. Use `1` to change to primary weapon. Use `2` to change to secondary weapon.
+Use `W` `A` `S` `D` to move your player. Use `left-click` to shoot. Use `R` to reload. Use `E` to interact with objects. Use `1` to change to primary weapon. Use `2` to change to secondary weapon. Use `Esc` to pause the game.
 
 ## Game Overview
 
@@ -16,7 +16,11 @@ The only goal is to survive as long as possible during a zombie invasion. You ea
 
 ### Reflection
 
+**First Iteration**<br>
 This iteration was great fun to work through. We accomplished much more than we originally assigned in our plan. At the beginning of the iteration, we dedicated our work to consist largely of pair programming. All in all, over half of our programming sessions were paired which helped us to keep the structure of our code maintainable, as we were critiquing each other's choices in implementation. As a team, we were successful in sticking to our plan and completing features in order. We struggled with maintaining the warnings in the source code continuously. It seemed that after a few commits, we would have a pile of warnings that would all be addressed at once. In future iterations, we plan on refraining from git committing until the source code is free from warnings. Overall, this iteration presented new and interesting challenges that required a great deal of effort to work through.
+
+**Second Iteration**<br>
+This iteration was focused on cleaning up existing code and setting our project up to have many features easily added. We made the most progress on aspects of the project that aren't user-facing. We were able to stick to one of our goals from last iteration which was to not commit to the repository unless there were no warnings in the source code. One shortcoming of this iteration was a lack of pair programming as both team members had heavy schedules that didn't fit together as often as last iteration. Even so, we were able to stay synchronized with each other through our plan. Overall, we made a lot of progress behind the scenes so to speak to set us up for adding many new features next iteration.
 
 
 ### Self-Evaluation
@@ -52,7 +56,9 @@ This iteration was great fun to work through. We accomplished much more than we 
 - [X] ⭐ Include an AI-controlled characters
 - [ ] ⭐ Include an AI-controlled character controlled with a different AI
 - [ ] ⭐ Add a pause menu that includes, at minimum, the ability to resume or return to the main menu
+- [ ] ⭐ Follow the planning process introduced in Iteration 1 for both Iterations 2 and 3, and mention the impact of this in your personal reflection.
 - [ ] ⭐ The game is released publicly on <code>itch.io</code>, with all the recommended accompanying text, screenshots, gameplay videos, <i>etc.</i>
+
 
 As denoted by the requirements above, this project has earned the grade of A.
 
@@ -65,9 +71,18 @@ We used layers and masks to manage many collisions in the game. One example of t
 >
 One example of juiciness from this game is the player's firing animation when they shoot the shotgun or the assault rifle.
 
+>⭐ Use particle effects
+>
+There are particles that activate when you walk over the concrete and grass floors.
+
+>⭐ Include an AI-controlled characters
+>
+The zombies chase the player.
+
 
 
 ## Third-Party Assets
 [Assault Rifle Fire Sound](licenses/assault_rifle_fire.txt)<br>
 [Shotgun Fire Sound](licenses/shotgun_fire.txt)<br>
+[Pistol Fire Sound](licenses/pistol_fire.txt)<br>
 [Staatliches Font](licenses/OFL.txt)<br>
