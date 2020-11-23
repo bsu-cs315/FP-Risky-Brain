@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://src/HUD.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/visual/environment/tiles/grass.png" type="Texture" id=2]
@@ -17,6 +17,7 @@
 [ext_resource path="res://src/EnemySpawner.gd" type="Script" id=15]
 [ext_resource path="res://src/enemies/EnemySpawnPoint.tscn" type="PackedScene" id=16]
 [ext_resource path="res://src/menus/PauseMenu.tscn" type="PackedScene" id=17]
+[ext_resource path="res://src/environment/interactables/wall_weapons/WallPistol.tscn" type="PackedScene" id=18]
 
 [sub_resource type="TileSet" id=1]
 resource_local_to_scene = true
@@ -526,3 +527,7 @@ refill_cost = 251
 position = Vector2( 1014, 505 )
 cost = 2000
 refill_cost = 1000
+
+[node name="WallPistol" parent="WallWeapons" instance=ExtResource( 18 )]
+position = Vector2( 244, 285.5 )
+rotation = -1.5708
