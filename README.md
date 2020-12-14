@@ -22,6 +22,8 @@ This iteration was great fun to work through. We accomplished much more than we 
 **Second Iteration**<br>
 This iteration was focused on cleaning up existing code and setting our project up to have many features easily added. We made the most progress on aspects of the project that aren't user-facing. We were able to stick to one of our goals from last iteration which was to not commit to the repository unless there were no warnings in the source code. One shortcoming of this iteration was a lack of pair programming as both team members had heavy schedules that didn't fit together as often as last iteration. Even so, we were able to stay synchronized with each other through our plan. Overall, we made a lot of progress behind the scenes so to speak to set us up for adding many new features next iteration.
 
+**Third Iteration**<br>
+This iteration was focused on juicing parts of the game that we felt were lacking. As as team, we still couldn't have many pair programming sessions because of reasons outside of our control; however, we were able to keep our communication channel open via Discord. Once again, we adhered to a goal from our first iteration which was to not commit code unless it was void of editor warnings. One area of improvement for this iteration would be using the project plan as a guide in deciding which features to take on. Overall, this iteration was fun and rewarding since we were able to add some user-facing features.
 
 ### Self-Evaluation
 
