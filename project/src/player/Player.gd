@@ -265,8 +265,9 @@ func take_damage(damage: int, area: Area2D, _attacker: Node) -> bool:
 	var took_damage: bool = false
 	if area.name == "PlayerArea":
 		health -= damage
-#		current_movement_speed = 0.8 * max_movement_speed
 		took_damage = true
+		if health > 0:
+			PlayerInfo.hud.flash_damage_indicator()
 	if health <= 0:
 		die()
 	else:
